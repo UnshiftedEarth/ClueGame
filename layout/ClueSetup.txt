@@ -1,11 +1,11 @@
 //Rooms and cards
-Room, Laboratory, C
+Room, Laboratory, L
 Room, Specimen Room, P
 Room, Admin, A
 Room, Weapons, W
 Room, Oxygen, O
 Room, Security, S 
-Room, Electrical, 
+Room, Electrical, E
 Room, Storage, G
 Room, Office, F
 // other spaces 
