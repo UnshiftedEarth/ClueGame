@@ -5,6 +5,10 @@ import java.util.*;
 public class TestBoard {
 	
 	
+	public TestBoard(int rows, int col) {
+		super();
+	}
+
 	public void calcTargets(TestBoardCell startCell, int pathlength) {
 		
 	}

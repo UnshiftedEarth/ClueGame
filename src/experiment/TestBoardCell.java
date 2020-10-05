@@ -2,7 +2,7 @@ package experiment;
 
 import java.util.*;
 
-public class TestBoardCell {
+public class TestBoardCell implements Comparable<TestBoardCell> {
 	
 	
 	public TestBoardCell(int row, int column) {
@@ -30,5 +30,12 @@ public class TestBoardCell {
 		
 	}
 
+	@Override
+	public int compareTo(TestBoardCell cell) {
+		if (this.equals(cell)) {
+			return 0;
+		}
+		return -1;
+	}
 	
 }
