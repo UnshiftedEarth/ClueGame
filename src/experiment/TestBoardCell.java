@@ -4,30 +4,48 @@ import java.util.*;
 
 public class TestBoardCell implements Comparable<TestBoardCell> {
 	
+	private int row, col;
+	private boolean isOccupied, isRoom;
+	private Set<TestBoardCell> adjList;
 	
-	public TestBoardCell(int row, int column) {
+	public TestBoardCell(int row, int col) {
 		super();
+		this.row = row;
+		this.col = col;
+		adjList = new HashSet<TestBoardCell>();
 	}
 	
 	// Setters and Getters
 	public Set<TestBoardCell> getAdjList() {
-		return new TreeSet<TestBoardCell>();
+		return adjList;
+	}
+	
+	public void addToAdjList(TestBoardCell cell) {
+		adjList.add(cell);
 	}
 	
 	public void setRoom(boolean room) {
-		
+		isRoom = room;
 	}
 	
 	public boolean isRoom() {
-		return false;
+		return isRoom;
 	}
 
 	public boolean isOccupied() {
-		return false;
+		return isOccupied;
 	}
 
 	public void setOccupied(boolean occupied) {
-		
+		isOccupied = occupied;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public int getCol() {
+		return col;
 	}
 
 	@Override

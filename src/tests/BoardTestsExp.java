@@ -15,7 +15,7 @@ class BoardTestsExp {
 	@BeforeEach
 	public void setup() {
 		//setup board with 3 rows and 3 columns
-		board = new TestBoard(3,3);
+		board = new TestBoard();
 	}
 	
 	
@@ -99,7 +99,7 @@ class BoardTestsExp {
 		TestBoardCell cell = board.getCell(0,0);
 		board.calcTargets(cell, 3);
 		Set<TestBoardCell> targets = board.getTargets();
-		assertEquals(targets.size(), 6);
+		assertEquals(6, targets.size());
 		assertTrue(targets.contains(board.getCell(3, 0)));
 		assertTrue(targets.contains(board.getCell(2, 1)));
 		assertTrue(targets.contains(board.getCell(0, 1)));
@@ -145,16 +145,14 @@ class BoardTestsExp {
 	 */
 	@Test
 	public void testSpaceOccupied2() {
-		board.getCell(3, 0).setOccupied(true);
-		board.getCell(2, 1).setOccupied(true);
 		board.getCell(0, 1).setOccupied(true);
 		TestBoardCell cell = board.getCell(0,0);
 		board.calcTargets(cell, 3);
 		Set<TestBoardCell> targets = board.getTargets();
 		assertEquals(targets.size(), 3);
 		assertTrue(targets.contains(board.getCell(1, 2)));
-		assertTrue(targets.contains(board.getCell(0, 3)));
-		assertTrue(targets.contains(board.getCell(1, 0)));
+		assertTrue(targets.contains(board.getCell(2, 1)));
+		assertTrue(targets.contains(board.getCell(3, 0)));
 	}
 	
 	/*
