@@ -1,0 +1,13 @@
+//Rooms and cards
+Room, Laboratory, L
+Room, Specimen Room, P
+Room, Admin, A
+Room, Weapons, W
+Room, Oxygen, O
+Room, Security, S 
+Room, Electrical, E
+Room, Storage, G
+Room, Office, F
+// other spaces 
+Space, Hallway, H 
+Space, Unused, X
