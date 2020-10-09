@@ -16,7 +16,7 @@ import clueGame.Room;
 class FileInitTests {
 	
 	public static final int LEGEND_SIZE = 11;
-	public static final int NUM_ROWS = 25;
+	public static final int NUM_ROWS = 23;
 	public static final int NUM_COLUMNS = 24;
 
 
@@ -27,7 +27,7 @@ class FileInitTests {
 		// Board is singleton, get the only instance
 		board = Board.getInstance();
 		// set the file names to use my config files
-		board.setConfigFiles("ClueLayoutcsv", "ClueSetup.txt");
+		board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");
 		// Initialize will load BOTH config files
 		board.initialize();
 	}
@@ -37,7 +37,7 @@ class FileInitTests {
 		// To ensure data is correctly loaded, test retrieving a few rooms
 		// from the hash, including the first and last in the file and a few others
 		// from among us map
-		assertEquals("Labratory", board.getRoom('L').getName() );
+		assertEquals("Laboratory", board.getRoom('L').getName() );
 		assertEquals("Specimen Room", board.getRoom('P').getName() );
 		assertEquals("Admin", board.getRoom('A').getName() );
 		assertEquals("Weapons", board.getRoom('W').getName() );
@@ -145,15 +145,15 @@ class FileInitTests {
 	// test for different types of rooms in close proximity
 	@Test
 	public void testAmongUsRoomsCloseProximity() {
-		BoardCell cell1 = new BoardCell(4,20);
-		BoardCell cell2 = new BoardCell(4,21);
-		BoardCell cell3 = new BoardCell(4,22);
+		BoardCell cell1 = board.getCell(4,20);
+		BoardCell cell2 = board.getCell(4,21);
+		BoardCell cell3 = board.getCell(4,22);
 		assertTrue(cell1 != null && board.getRoom(cell1) != null);
 		assertTrue(cell2 != null && board.getRoom(cell2) != null);
 		assertTrue(cell3 != null && board.getRoom(cell3) != null);
-		assertEquals(board.getRoom(cell1).getName(), "Secret Passage" );
 		assertEquals(board.getRoom(cell1).getName(), "Laboratory" );
-		assertEquals(board.getRoom(cell1).getName(), "Walkway" );
+		assertEquals(board.getRoom(cell2).getName(), "Laboratory" );
+		assertEquals(board.getRoom(cell3).getName(), "Hallway" );
 		assertTrue(cell3.isDoorway());
 		assertEquals(DoorDirection.LEFT, cell3.getDoorDirection());
 	}
@@ -162,13 +162,14 @@ class FileInitTests {
 	public void testAmongUsNumberOfSecretPassages() {
 		//ensure we have the correct number of secret passages on the among us map
 		int numPassages = 0;
-		for (int row = 0; row < board.getNumRows(); row++)
+		for (int row = 0; row < board.getNumRows(); row++) {
 			for (int col = 0; col < board.getNumColumns(); col++) {
 				BoardCell cell = board.getCell(row, col);
-				if (board.getRoom(cell).getName() == "Secret Passage" ) {
+				if (cell.getSecretPassage() != '\u0000') {
 					numPassages++;
 				}
 			}
+		}
 		Assert.assertEquals(4, numPassages);
 	}
 }

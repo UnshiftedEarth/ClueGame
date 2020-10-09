@@ -33,8 +33,6 @@ public class Board {
 	 */
 	public void initialize() {
 		loadConfigFiles();
-		loadSetupConfig();
-		loadLayoutConfig();
 		createAdjLists();
 	}
 	
@@ -92,8 +90,8 @@ public class Board {
 	}
 
 	public void loadConfigFiles() {
-		layoutConfigFile = "./data/ClueLayout306.csv";
-		setupConfigFile = "./data/ClueSetup306.txt";
+		loadSetupConfig();
+		loadLayoutConfig();
 	}
 
 	@SuppressWarnings("resource")
@@ -253,8 +251,8 @@ public class Board {
 	}
 
 	public void setConfigFiles(String csv, String txt) {
-		layoutConfigFile = csv;
-		setupConfigFile = txt;
+		layoutConfigFile = "./data/" + csv;
+		setupConfigFile = "./data/" + txt;
 	}
 	
 }
