@@ -1,5 +1,7 @@
 package clueGame;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 
 
@@ -15,13 +17,12 @@ public class Board {
 	private Map<Character, Room> roomMap;
 	private static Board instance = new Board();
 
-	final int NUM_ROWS = 100;
-	final int NUM_COLUMNS = 100;
+	private int NUM_ROWS = 0;
+	private int NUM_COLUMNS = 0;
 
 
 	private Board() {
 		super();
-		grid = new BoardCell[NUM_ROWS][NUM_COLUMNS];
 		targets = new HashSet<BoardCell>();
 		visited = new HashSet<BoardCell>();
 		roomMap = new HashMap<Character, Room>();
@@ -34,22 +35,9 @@ public class Board {
 		loadConfigFiles();
 		loadSetupConfig();
 		loadLayoutConfig();
-		//createAdjLists();
-		
-		//TODO modify this when implementing code
-		//temporary setup
-		tempSetup();
+		createAdjLists();
 	}
 	
-	//temporary setup method until initializations of files
-	public void tempSetup() {
-		for (int i = 0; i < NUM_ROWS; i++) {
-			for (int j = 0; j < NUM_COLUMNS; j++) {
-				BoardCell cell = new BoardCell(i, j);
-				grid[i][j] = cell;
-			}
-		}
-	}
 	
 	/*
 	 * setup method to create adjacency lists for all board cells
@@ -104,16 +92,136 @@ public class Board {
 	}
 
 	public void loadConfigFiles() {
-		//TODO not written yet
+		layoutConfigFile = "./data/ClueLayout306.csv";
+		setupConfigFile = "./data/ClueSetup306.txt";
 	}
 
+	@SuppressWarnings("resource")
 	public void loadSetupConfig() {
-		//TODO not written yet
+		// read in setup txt file
+		FileReader reader = null;
+		try {
+			reader = new FileReader(setupConfigFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		Scanner scanner = new Scanner(reader);
+		while (scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+			if (line.substring(0, 2).equals("//")) {
+				continue;
+			}
+			String[] lineList = line.split(",");
+			String roomName = lineList[1].trim();
+			char symbol = lineList[2].trim().charAt(0);
+			Room room = new Room(roomName);
+			roomMap.put(symbol, room);
+		}
 	}
 	
+	
+	@SuppressWarnings("resource")
 	public void loadLayoutConfig() {
-		//TODO not written yet
+		// reads in the board csv file and stores in temporary board ArrayList matrix
+		ArrayList<List<String>> tempBoard = new ArrayList<List<String>>();
+		FileReader reader = null;
+		try {
+			reader = new FileReader(layoutConfigFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		Scanner scanner = new Scanner(reader);
+		while (scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+			List<String> lineList = Arrays.asList(line.split(","));
+			tempBoard.add(lineList);
+		}
+		
+		// set number of rows and columns based on ArrayList matrix
+		NUM_ROWS = tempBoard.size();
+		NUM_COLUMNS = tempBoard.get(0).size();
+		// allocate space for grid 
+		grid = new BoardCell[NUM_ROWS][NUM_COLUMNS];
+		
+		// initialize the board with board cells
+		for (int i = 0; i < tempBoard.size(); i++) {
+			for (int j = 0; j < tempBoard.get(i).size(); j++) {
+				String entry = tempBoard.get(i).get(j);
+				BoardCell cell = new BoardCell(i,j);
+				grid[i][j] = cell;
+				Room room = roomMap.get(entry.charAt(0));
+				cell.setInitial(entry.charAt(0));
+				if (entry.length() == 1) {
+					if (!room.getName().equals("Unused") && !room.getName().equals("Walkway")) {
+						cell.setRoom(true);
+					}
+					else {
+						cell.setRoom(false);
+					}
+					cell.setRoomCenter(false);
+					cell.setRoomLabel(false);
+					cell.setDoorDirection(DoorDirection.NONE);
+				}
+				else {
+					String second = entry.substring(1,2);
+					switch (second) {
+					case "^":
+						cell.setDoorDirection(DoorDirection.UP);
+						setCellNotRoom(cell);
+						break;
+					case ">":
+						cell.setDoorDirection(DoorDirection.RIGHT);
+						setCellNotRoom(cell);
+						break;
+					case "v": 
+						cell.setDoorDirection(DoorDirection.DOWN);
+						setCellNotRoom(cell);
+						break;
+					case "<":
+						cell.setDoorDirection(DoorDirection.LEFT);
+						setCellNotRoom(cell);
+						break;
+					case "*":
+						cell.setRoom(true);
+						cell.setRoomCenter(true);
+						cell.setRoomLabel(false);
+						cell.setDoorDirection(DoorDirection.NONE);
+						room.setCenterCell(cell);
+						break;
+					case "#":
+						cell.setRoom(true);
+						cell.setRoomCenter(false);
+						cell.setRoomLabel(true);
+						cell.setDoorDirection(DoorDirection.NONE);
+						room.setLabelCell(cell);
+						break;
+					default: 
+						if (roomMap.containsKey(second.charAt(0))) {
+							cell.setSecretPassage(second.charAt(0));
+							cell.setRoom(true);
+							cell.setRoomLabel(false);
+							cell.setRoomCenter(false);
+							cell.setDoorDirection(DoorDirection.NONE);
+						}
+						else {
+							// throw exception
+						}
+						break;
+					}
+				}
+				cell.setOccupied(false);
+			}
+		}
 	}
+
+	private void setCellNotRoom(BoardCell cell) {
+		cell.setRoom(false);
+		cell.setRoomLabel(false);
+		cell.setRoomCenter(false);
+	}
+	
 
 	//setters and getters
 	public Set<BoardCell> getTargets() {
@@ -125,13 +233,11 @@ public class Board {
 	}
 	
 	public Room getRoom(char room) {
-		//TODO not written yet
-		return new Room("");
+		return roomMap.get(room);
 	}
 	
 	public Room getRoom(BoardCell cell) {
-		//TODO not written yet
-		return new Room("");
+		return roomMap.get(cell.getInitial());
 	}
 
 	public static Board getInstance() {

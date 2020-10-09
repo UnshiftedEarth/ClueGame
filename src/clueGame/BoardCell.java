@@ -36,9 +36,31 @@ public class BoardCell implements Comparable<BoardCell> {
 		isRoom = room;
 	}
 	
+	public void setInitial(char initial) {
+		this.initial = initial;
+	}
+
+	public void setSecretPassage(char secretPassage) {
+		this.secretPassage = secretPassage;
+	}
+
+	public void setDoorDirection(DoorDirection doorDirection) {
+		this.doorDirection = doorDirection;
+	}
+
+	public void setRoomLabel(boolean roomLabel) {
+		this.roomLabel = roomLabel;
+	}
+
+	public void setRoomCenter(boolean roomCenter) {
+		this.roomCenter = roomCenter;
+	}
+	
 	public boolean isDoorway() {
-		//TODO not written yet
-		return false;
+		if (doorDirection == DoorDirection.NONE) {
+			return false;
+		}
+		return true;
 	}
 	
 	public boolean isRoom() {
@@ -69,6 +91,10 @@ public class BoardCell implements Comparable<BoardCell> {
 		return secretPassage;
 	}
 
+	public char getInitial() {
+		return initial;
+	}
+	
 	public int getRow() {
 		return row;
 	}
