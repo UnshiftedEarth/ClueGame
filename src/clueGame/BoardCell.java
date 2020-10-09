@@ -7,6 +7,9 @@ import java.util.Set;
 public class BoardCell implements Comparable<BoardCell> {
 	
 	private int row, col;
+	private char initial, secretPassage;
+	private DoorDirection doorDirection;
+	private boolean roomLabel, roomCenter;
 	private boolean isOccupied, isRoom;
 	private Set<BoardCell> adjList;
 	
@@ -33,6 +36,11 @@ public class BoardCell implements Comparable<BoardCell> {
 		isRoom = room;
 	}
 	
+	public boolean isDoorway() {
+		//TODO not written yet
+		return false;
+	}
+	
 	public boolean isRoom() {
 		return isRoom;
 	}
@@ -40,9 +48,25 @@ public class BoardCell implements Comparable<BoardCell> {
 	public boolean isOccupied() {
 		return isOccupied;
 	}
+	
+	public boolean isLabel() {
+		return roomLabel;
+	}
+	
+	public boolean isRoomCenter() {
+		return roomCenter;
+	}
 
 	public void setOccupied(boolean occupied) {
 		isOccupied = occupied;
+	}
+	
+	public DoorDirection getDoorDirection() {
+		return doorDirection;
+	}
+	
+	public char getSecretPassage() {
+		return secretPassage;
 	}
 
 	public int getRow() {
@@ -60,4 +84,5 @@ public class BoardCell implements Comparable<BoardCell> {
 		}
 		return -1;
 	}
+
 }

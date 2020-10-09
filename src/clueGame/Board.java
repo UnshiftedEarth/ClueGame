@@ -13,31 +13,42 @@ public class Board {
 	private String setupConfigFile;
 
 	private Map<Character, Room> roomMap;
-	private static Board instance;
+	private static Board instance = new Board();
 
-	final int NUM_ROWS= 4;
-	final int NUM_COLUMNS = 4;
+	final int NUM_ROWS = 100;
+	final int NUM_COLUMNS = 100;
 
 
-	public Board() {
+	private Board() {
 		super();
 		grid = new BoardCell[NUM_ROWS][NUM_COLUMNS];
 		targets = new HashSet<BoardCell>();
 		visited = new HashSet<BoardCell>();
-		boardSetup();
+		roomMap = new HashMap<Character, Room>();
 	}
 
 	/*
-	 * setup method for initializing the board and creating 
+	 * setup method for initializing the board
 	 */
-	private void boardSetup() {
+	public void initialize() {
+		loadConfigFiles();
+		loadSetupConfig();
+		loadLayoutConfig();
+		//createAdjLists();
+		
+		//TODO modify this when implementing code
+		//temporary setup
+		tempSetup();
+	}
+	
+	//temporary setup method until initializations of files
+	public void tempSetup() {
 		for (int i = 0; i < NUM_ROWS; i++) {
 			for (int j = 0; j < NUM_COLUMNS; j++) {
 				BoardCell cell = new BoardCell(i, j);
 				grid[i][j] = cell;
 			}
 		}
-		createAdjLists();
 	}
 	
 	/*
@@ -62,18 +73,20 @@ public class Board {
 			}
 		}
 	}
-	
-	public void initialize() {
-		// not written yet
-	}
 
+	/*
+	 * methods for calculating valid spaces to move to
+	 */
 	public void calcTargets(BoardCell startCell, int pathlength) {
 		visited.clear();
 		targets.clear();
 		visited.add(startCell);
 		findAllTargets(startCell, pathlength);
 	}
-
+	
+	/*
+	 * recursive method for calculating valid spaces to move to
+	 */
 	public void findAllTargets(BoardCell startCell, int length) {
 		for (BoardCell cell : startCell.getAdjList()) {
 			if (visited.contains(cell) || cell.isOccupied()) {
@@ -91,15 +104,15 @@ public class Board {
 	}
 
 	public void loadConfigFiles() {
-		// not written yet
+		//TODO not written yet
 	}
 
 	public void loadSetupConfig() {
-		// not written yet
+		//TODO not written yet
 	}
 	
 	public void loadLayoutConfig() {
-		// not written yet
+		//TODO not written yet
 	}
 
 	//setters and getters
@@ -110,9 +123,15 @@ public class Board {
 	public BoardCell getCell(int row, int col) {
 		return grid[row][col];
 	}
-
-	public Map<Character, Room> getRoomMap() {
-		return roomMap;
+	
+	public Room getRoom(char room) {
+		//TODO not written yet
+		return new Room("");
+	}
+	
+	public Room getRoom(BoardCell cell) {
+		//TODO not written yet
+		return new Room("");
 	}
 
 	public static Board getInstance() {
