@@ -32,6 +32,7 @@ public class Board {
 	 * setup method for initializing the board
 	 */
 	public void initialize() {
+		// must load config files first before creating adjLists
 		loadConfigFiles();
 		createAdjLists();
 	}
@@ -73,7 +74,7 @@ public class Board {
 	/*
 	 * recursive method for calculating valid spaces to move to
 	 */
-	public void findAllTargets(BoardCell startCell, int length) {
+	private void findAllTargets(BoardCell startCell, int length) {
 		for (BoardCell cell : startCell.getAdjList()) {
 			if (visited.contains(cell) || cell.isOccupied()) {
 				continue;
@@ -143,78 +144,90 @@ public class Board {
 		// allocate space for grid 
 		grid = new BoardCell[NUM_ROWS][NUM_COLUMNS];
 		
+		initializeBoard(tempBoard);
+	}
+
+	private void initializeBoard(ArrayList<List<String>> tempBoard) {
 		// initialize the board with board cells
 		for (int i = 0; i < tempBoard.size(); i++) {
 			for (int j = 0; j < tempBoard.get(i).size(); j++) {
-				String entry = tempBoard.get(i).get(j);
 				BoardCell cell = new BoardCell(i,j);
 				grid[i][j] = cell;
-				Room room = roomMap.get(entry.charAt(0));
-				cell.setInitial(entry.charAt(0));
-				if (entry.length() == 1) {
-					if (!room.getName().equals("Unused") && !room.getName().equals("Walkway")) {
-						cell.setRoom(true);
-					}
-					else {
-						cell.setRoom(false);
-					}
-					cell.setRoomCenter(false);
-					cell.setRoomLabel(false);
-					cell.setDoorDirection(DoorDirection.NONE);
-				}
-				else {
-					String second = entry.substring(1,2);
-					switch (second) {
-					case "^":
-						cell.setDoorDirection(DoorDirection.UP);
-						setCellNotRoom(cell);
-						break;
-					case ">":
-						cell.setDoorDirection(DoorDirection.RIGHT);
-						setCellNotRoom(cell);
-						break;
-					case "v": 
-						cell.setDoorDirection(DoorDirection.DOWN);
-						setCellNotRoom(cell);
-						break;
-					case "<":
-						cell.setDoorDirection(DoorDirection.LEFT);
-						setCellNotRoom(cell);
-						break;
-					case "*":
-						cell.setRoom(true);
-						cell.setRoomCenter(true);
-						cell.setRoomLabel(false);
-						cell.setDoorDirection(DoorDirection.NONE);
-						room.setCenterCell(cell);
-						break;
-					case "#":
-						cell.setRoom(true);
-						cell.setRoomCenter(false);
-						cell.setRoomLabel(true);
-						cell.setDoorDirection(DoorDirection.NONE);
-						room.setLabelCell(cell);
-						break;
-					default: 
-						if (roomMap.containsKey(second.charAt(0))) {
-							cell.setSecretPassage(second.charAt(0));
-							cell.setRoom(true);
-							cell.setRoomLabel(false);
-							cell.setRoomCenter(false);
-							cell.setDoorDirection(DoorDirection.NONE);
-						}
-						else {
-							// throw exception
-						}
-						break;
-					}
-				}
-				cell.setOccupied(false);
+				String entry = tempBoard.get(i).get(j);
+				changeCellAttributes(cell, entry);
 			}
 		}
 	}
 
+	private void changeCellAttributes(BoardCell cell, String entry) {
+		// adjust cell private variables depending on symbol from config
+		Room room = roomMap.get(entry.charAt(0));
+		cell.setInitial(entry.charAt(0));
+		if (entry.length() == 1) {
+			// if symbol has only one character
+			if (!room.getName().equals("Unused") && !room.getName().equals("Walkway")) {
+				cell.setRoom(true);
+			}
+			else {
+				cell.setRoom(false);
+			}
+			cell.setRoomCenter(false);
+			cell.setRoomLabel(false);
+			cell.setDoorDirection(DoorDirection.NONE);
+		}
+		else {
+			// if symbol has 2 characters
+			String second = entry.substring(1,2);
+			switch (second) {
+			case "^":
+				cell.setDoorDirection(DoorDirection.UP);
+				setCellNotRoom(cell);
+				break;
+			case ">":
+				cell.setDoorDirection(DoorDirection.RIGHT);
+				setCellNotRoom(cell);
+				break;
+			case "v": 
+				cell.setDoorDirection(DoorDirection.DOWN);
+				setCellNotRoom(cell);
+				break;
+			case "<":
+				cell.setDoorDirection(DoorDirection.LEFT);
+				setCellNotRoom(cell);
+				break;
+			case "*":
+				cell.setRoom(true);
+				cell.setRoomCenter(true);
+				cell.setRoomLabel(false);
+				cell.setDoorDirection(DoorDirection.NONE);
+				room.setCenterCell(cell);
+				break;
+			case "#":
+				cell.setRoom(true);
+				cell.setRoomCenter(false);
+				cell.setRoomLabel(true);
+				cell.setDoorDirection(DoorDirection.NONE);
+				room.setLabelCell(cell);
+				break;
+			default: 
+				if (roomMap.containsKey(second.charAt(0))) {
+					cell.setSecretPassage(second.charAt(0));
+					cell.setRoom(true);
+					cell.setRoomLabel(false);
+					cell.setRoomCenter(false);
+					cell.setDoorDirection(DoorDirection.NONE);
+				}
+				else {
+					// throw exception
+				}
+				break;
+			}
+		}
+		cell.setOccupied(false);
+	}
+
 	private void setCellNotRoom(BoardCell cell) {
+		// sets cell to not a room
 		cell.setRoom(false);
 		cell.setRoomLabel(false);
 		cell.setRoomCenter(false);
