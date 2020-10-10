@@ -65,34 +65,6 @@ public class Board {
 		}
 	}
 
-	/*
-	 * methods for calculating valid spaces to move to
-	 */
-	public void calcTargets(BoardCell startCell, int pathlength) {
-		visited.clear();
-		targets.clear();
-		visited.add(startCell);
-		findAllTargets(startCell, pathlength);
-	}
-	
-	/*
-	 * recursive method for calculating valid spaces to move to
-	 */
-	private void findAllTargets(BoardCell startCell, int length) {
-		for (BoardCell cell : startCell.getAdjList()) {
-			if (visited.contains(cell) || cell.isOccupied()) {
-				continue;
-			}
-			visited.add(cell);
-			if (length == 1 || cell.isRoom()) {
-				targets.add(cell);
-			}
-			else {
-				findAllTargets(cell, length-1);
-			}
-			visited.remove(cell);
-		}
-	}
 
 	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
 		loadSetupConfig();
@@ -126,7 +98,7 @@ public class Board {
 		// reads in the board csv file and stores in temporary board ArrayList matrix
 		ArrayList<List<String>> tempBoard = new ArrayList<List<String>>();
 		int numCols = 0;
-			FileReader reader = new FileReader(layoutConfigFile);
+		FileReader reader = new FileReader(layoutConfigFile);
 		Scanner scanner = new Scanner(reader);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
@@ -148,7 +120,10 @@ public class Board {
 		
 		initializeBoard(tempBoard);
 	}
-
+	
+	/*
+	 * method for initializing the board with BoardCells
+	 */
 	private void initializeBoard(ArrayList<List<String>> tempBoard) throws BadConfigFormatException {
 		// initialize the board with board cells
 		for (int i = 0; i < tempBoard.size(); i++) {
@@ -163,9 +138,11 @@ public class Board {
 			}
 		}
 	}
-
-	private void changeCellAttributes(BoardCell cell, String entry) {
-		// adjust cell private variables depending on symbol from config
+	
+	/*
+	 * method for adjusting cell private variables depending on symbol from config
+	 */
+	private void changeCellAttributes(BoardCell cell, String entry) throws BadConfigFormatException {
 		Room room = roomMap.get(entry.charAt(0));
 		cell.setInitial(entry.charAt(0));
 		if (entry.length() == 1) {
@@ -173,11 +150,6 @@ public class Board {
 			if (!room.getName().equals("Unused") && !room.getName().equals("Walkway")) {
 				cell.setRoom(true);
 			}
-			else {
-				cell.setRoom(false);
-			}
-			cell.setRoomCenter(false);
-			cell.setRoomLabel(false);
 			cell.setDoorDirection(DoorDirection.NONE);
 		}
 		else {
@@ -186,30 +158,24 @@ public class Board {
 			switch (second) {
 			case "^":
 				cell.setDoorDirection(DoorDirection.UP);
-				setCellNotRoom(cell);
 				break;
 			case ">":
 				cell.setDoorDirection(DoorDirection.RIGHT);
-				setCellNotRoom(cell);
 				break;
 			case "v": 
 				cell.setDoorDirection(DoorDirection.DOWN);
-				setCellNotRoom(cell);
 				break;
 			case "<":
 				cell.setDoorDirection(DoorDirection.LEFT);
-				setCellNotRoom(cell);
 				break;
 			case "*":
 				cell.setRoom(true);
 				cell.setRoomCenter(true);
-				cell.setRoomLabel(false);
 				cell.setDoorDirection(DoorDirection.NONE);
 				room.setCenterCell(cell);
 				break;
 			case "#":
 				cell.setRoom(true);
-				cell.setRoomCenter(false);
 				cell.setRoomLabel(true);
 				cell.setDoorDirection(DoorDirection.NONE);
 				room.setLabelCell(cell);
@@ -218,24 +184,43 @@ public class Board {
 				if (roomMap.containsKey(second.charAt(0))) {
 					cell.setSecretPassage(second.charAt(0));
 					cell.setRoom(true);
-					cell.setRoomLabel(false);
-					cell.setRoomCenter(false);
 					cell.setDoorDirection(DoorDirection.NONE);
 				}
 				else {
-					// throw exception
+					throw new BadConfigFormatException("Error: Layout File is not in proper format");
 				}
 				break;
 			}
 		}
-		cell.setOccupied(false);
 	}
 
-	private void setCellNotRoom(BoardCell cell) {
-		// sets cell to not a room
-		cell.setRoom(false);
-		cell.setRoomLabel(false);
-		cell.setRoomCenter(false);
+	/*
+	 * methods for calculating valid spaces to move to
+	 */
+	public void calcTargets(BoardCell startCell, int pathlength) {
+		visited.clear();
+		targets.clear();
+		visited.add(startCell);
+		findAllTargets(startCell, pathlength);
+	}
+	
+	/*
+	 * recursive method for calculating valid spaces to move to
+	 */
+	private void findAllTargets(BoardCell startCell, int length) {
+		for (BoardCell cell : startCell.getAdjList()) {
+			if (visited.contains(cell) || cell.isOccupied()) {
+				continue;
+			}
+			visited.add(cell);
+			if (length == 1 || cell.isRoom()) {
+				targets.add(cell);
+			}
+			else {
+				findAllTargets(cell, length-1);
+			}
+			visited.remove(cell);
+		}
 	}
 	
 
