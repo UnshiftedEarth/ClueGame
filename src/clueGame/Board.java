@@ -87,40 +87,44 @@ public class Board {
 				if(i + 1 < NUM_ROWS) {
 					BoardCell down = grid[i+1][j];
 					Room downRoom = roomMap.get(down.getInitial());
+					String name = downRoom.getName();
 					if (down.isRoom() && cell.getDoorDirection() == DoorDirection.DOWN) {
 						cell.addToAdjList(downRoom.getCenterCell());
 					}
-					else if (!down.isOccupied() && downRoom.getName().equals("Walkway") || downRoom.getName().equals("Hallway")) {
+					else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
 						cell.addToAdjList(down);
 					}
 				}
 				if(i - 1 >= 0) {
 					BoardCell up = grid[i-1][j];
 					Room upRoom = roomMap.get(up.getInitial());
+					String name = upRoom.getName();
 					if (up.isRoom() && cell.getDoorDirection() == DoorDirection.UP) {
 						cell.addToAdjList(upRoom.getCenterCell());
 					}
-					else if (!up.isOccupied() && upRoom.getName().equals("Walkway") || upRoom.getName().equals("Hallway")) {
+					else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
 						cell.addToAdjList(up);
 					}
 				}
 				if(j + 1 < NUM_COLUMNS) {
 					BoardCell right = grid[i][j+1];
 					Room rightRoom = roomMap.get(right.getInitial());
+					String name = rightRoom.getName();
 					if (right.isRoom() && cell.getDoorDirection() == DoorDirection.RIGHT) {
 						cell.addToAdjList(rightRoom.getCenterCell());
 					}
-					else if (!right.isOccupied() && rightRoom.getName().equals("Walkway") || rightRoom.getName().equals("Hallway")) {
+					else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
 						cell.addToAdjList(right);
 					}
 				}
 				if(j - 1 >= 0) {
 					BoardCell left = grid[i][j-1];
 					Room leftRoom = roomMap.get(left.getInitial());
+					String name = leftRoom.getName();
 					if (left.isRoom() && cell.getDoorDirection() == DoorDirection.LEFT) {
 						cell.addToAdjList(leftRoom.getCenterCell());
 					}
-					else if (!left.isOccupied() && leftRoom.getName().equals("Walkway") || leftRoom.getName().equals("Hallway")) {
+					else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
 						cell.addToAdjList(left);
 					}
 				}
@@ -131,7 +135,7 @@ public class Board {
 						}
 					}
 				}
-				if (room.getSecretPassage() != null) {
+				if (room.getSecretPassage() != null && cell.isRoomCenter()) {
 					cell.addToAdjList(room.getSecretPassage().getCenterCell());
 				}
 			}
@@ -220,7 +224,8 @@ public class Board {
 		cell.setInitial(entry.charAt(0));
 		if (entry.length() == 1) {
 			// if symbol has only one character
-			if (!room.getName().equals("Unused") && !room.getName().equals("Walkway")) {
+			String name = room.getName();
+			if (!name.equals("Unused") && !name.equals("Walkway") && !name.equals("Hallway")) {
 				cell.setRoom(true);
 			}
 			cell.setDoorDirection(DoorDirection.NONE);
@@ -284,7 +289,7 @@ public class Board {
 	 */
 	private void findAllTargets(BoardCell startCell, int length) {
 		for (BoardCell cell : startCell.getAdjList()) {
-			if (visited.contains(cell) || cell.isOccupied()) {
+			if (visited.contains(cell) || !cell.isRoomCenter() && cell.isOccupied()) {
 				continue;
 			}
 			visited.add(cell);

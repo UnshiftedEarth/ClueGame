@@ -91,8 +91,8 @@ class BoardAdjTargetTest {
 		// Test adjacent to storage and unused
 		testList = board.getAdjList(6, 18);
 		assertEquals(2, testList.size());
-		assertTrue(testList.contains(board.getCell(6, 17)));
-		assertTrue(testList.contains(board.getCell(6, 19)));
+		assertTrue(testList.contains(board.getCell(5, 18)));
+		assertTrue(testList.contains(board.getCell(7, 18)));
 
 		// Test adjacent to label cell
 		testList = board.getAdjList(10, 14);
@@ -182,7 +182,7 @@ class BoardAdjTargetTest {
 		targets = board.getTargets();
 		assertEquals(3, targets.size());
 		assertTrue(targets.contains(board.getCell(10, 18)));
-		assertTrue(targets.contains(board.getCell(8, 2)));
+		assertTrue(targets.contains(board.getCell(12, 14)));
 		assertTrue(targets.contains(board.getCell(14, 18)));	
 
 		// test a roll of 3
@@ -219,7 +219,7 @@ class BoardAdjTargetTest {
 		// test a roll of 3
 		board.calcTargets(cell, 3);
 		targets = board.getTargets();
-		assertEquals(6, targets.size());
+		assertEquals(7, targets.size());
 		assertTrue(targets.contains(board.getCell(22, 19)));	
 		// center room cells
 		assertTrue(targets.contains(board.getCell(21, 21)));
@@ -323,7 +323,7 @@ class BoardAdjTargetTest {
 		board.getCell(15, 13).setOccupied(true);
 		board.getCell(21, 15).setOccupied(true);
 		board.getCell(22, 15).setOccupied(true);
-		board.calcTargets(board.getCell(12, 20), 1);
+		board.calcTargets(board.getCell(18, 15), 1);
 		board.getCell(15, 13).setOccupied(false);
 		board.getCell(21, 15).setOccupied(false);
 		board.getCell(22, 15).setOccupied(false);
