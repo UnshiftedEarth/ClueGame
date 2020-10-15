@@ -38,46 +38,57 @@ public class Board {
 		} catch (BadConfigFormatException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		createDoorLists();
+		// door lists must be created before calculating adjacencies
+		calcDoorLists();
 		calcAdjacencies();
 	}
 	
-	private void createDoorLists() {
+	/*
+	 * Setup method for creating a list of all doors that correspond to each room
+	 */
+	private void calcDoorLists() {
 		for (int i = 0; i < NUM_ROWS; i++) {
 			for (int j = 0; j < NUM_COLUMNS; j++) {
-				BoardCell cell = grid[i][j];
-				DoorDirection door = cell.getDoorDirection();
-				BoardCell temp;
-				Room room;
-				switch (door) {
-				case UP:
-					temp = grid[i-1][j];
-					room = roomMap.get(temp.getInitial());
-					room.addToDoorList(cell);
-					break;
-				case DOWN:
-					temp = grid[i+1][j];
-					room = roomMap.get(temp.getInitial());
-					room.addToDoorList(cell);
-					break;
-				case RIGHT:
-					temp = grid[i][j+1];
-					room = roomMap.get(temp.getInitial());
-					room.addToDoorList(cell);
-					break;
-				case LEFT:
-					temp = grid[i][j-1];
-					room = roomMap.get(temp.getInitial());
-					room.addToDoorList(cell);
-					break;
-				}
+				addToDoorList(i, j);
 			}
+		}
+	}
+	
+	// method for adding a cell to a room's door list
+	private void addToDoorList(int i, int j) {
+		BoardCell cell = grid[i][j];
+		DoorDirection door = cell.getDoorDirection();
+		BoardCell temp;
+		Room room;
+		switch (door) {
+		case NONE:
+			return;
+		case UP:
+			temp = grid[i-1][j];
+			room = roomMap.get(temp.getInitial());
+			room.addToDoorList(cell);
+			break;
+		case DOWN:
+			temp = grid[i+1][j];
+			room = roomMap.get(temp.getInitial());
+			room.addToDoorList(cell);
+			break;
+		case RIGHT:
+			temp = grid[i][j+1];
+			room = roomMap.get(temp.getInitial());
+			room.addToDoorList(cell);
+			break;
+		case LEFT:
+			temp = grid[i][j-1];
+			room = roomMap.get(temp.getInitial());
+			room.addToDoorList(cell);
+			break;
 		}
 	}
 	
 	
 	/*
-	 * setup method to create adjacency lists for all board cells
+	 * Setup method to create adjacency lists for all board cells
 	 */
 	private void calcAdjacencies() {
 		for (int i = 0; i < NUM_ROWS; i++) {
@@ -86,71 +97,63 @@ public class Board {
 				Room room = roomMap.get(cell.getInitial());
 				if(i + 1 < NUM_ROWS) {
 					BoardCell down = grid[i+1][j];
-					Room downRoom = roomMap.get(down.getInitial());
-					String name = downRoom.getName();
-					if (down.isRoom() && cell.getDoorDirection() == DoorDirection.DOWN) {
-						cell.addToAdjList(downRoom.getCenterCell());
-					}
-					else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
-						cell.addToAdjList(down);
-					}
+					checkAdjacent(cell, down, DoorDirection.DOWN);
 				}
 				if(i - 1 >= 0) {
 					BoardCell up = grid[i-1][j];
-					Room upRoom = roomMap.get(up.getInitial());
-					String name = upRoom.getName();
-					if (up.isRoom() && cell.getDoorDirection() == DoorDirection.UP) {
-						cell.addToAdjList(upRoom.getCenterCell());
-					}
-					else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
-						cell.addToAdjList(up);
-					}
+					checkAdjacent(cell, up, DoorDirection.UP);
 				}
 				if(j + 1 < NUM_COLUMNS) {
 					BoardCell right = grid[i][j+1];
-					Room rightRoom = roomMap.get(right.getInitial());
-					String name = rightRoom.getName();
-					if (right.isRoom() && cell.getDoorDirection() == DoorDirection.RIGHT) {
-						cell.addToAdjList(rightRoom.getCenterCell());
-					}
-					else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
-						cell.addToAdjList(right);
-					}
+					checkAdjacent(cell, right, DoorDirection.RIGHT);
 				}
 				if(j - 1 >= 0) {
 					BoardCell left = grid[i][j-1];
-					Room leftRoom = roomMap.get(left.getInitial());
-					String name = leftRoom.getName();
-					if (left.isRoom() && cell.getDoorDirection() == DoorDirection.LEFT) {
-						cell.addToAdjList(leftRoom.getCenterCell());
-					}
-					else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
-						cell.addToAdjList(left);
-					}
+					checkAdjacent(cell, left, DoorDirection.LEFT);
 				}
-				if (cell.isRoomCenter()) {
-					for (BoardCell c : room.getDoorList()) {
-						if (!c.isOccupied()) {
-							cell.addToAdjList(c);
-						}
-					}
-				}
-				if (room.getSecretPassage() != null && cell.isRoomCenter()) {
-					cell.addToAdjList(room.getSecretPassage().getCenterCell());
-				}
+				checkAdjacencyRoomCenter(cell, room);
 			}
 		}
 	}
+	
+	// method to check adjacencies of room centers
+	private void checkAdjacencyRoomCenter(BoardCell cell, Room room) {
+		if (cell.isRoomCenter()) {
+			for (BoardCell c : room.getDoorList()) {
+				if (!c.isOccupied()) {
+					cell.addToAdjList(c);
+				}
+			}
+		}
+		if (room.getSecretPassage() != null && cell.isRoomCenter()) {
+			cell.addToAdjList(room.getSecretPassage().getCenterCell());
+		}
+	}
+	
+	// method to check adjacencies of neighboring cells
+	private void checkAdjacent(BoardCell cell, BoardCell next, DoorDirection direction) {
+		Room nextRoom = roomMap.get(next.getInitial());
+		String name = nextRoom.getName();
+		if (next.isRoom() && cell.getDoorDirection() == direction) {
+			cell.addToAdjList(nextRoom.getCenterCell());
+		}
+		else if (!cell.isRoom() && (name.equals("Walkway") || name.equals("Hallway"))) {
+			cell.addToAdjList(next);
+		}
+	}
 
-
+	// method to load both config files
 	public void loadConfigFiles() throws BadConfigFormatException, FileNotFoundException {
 		loadSetupConfig();
 		loadLayoutConfig();
 	}
-
+	
+	
+	/*
+	 * this method loads in the room data from the setup text file
+	 */
 	@SuppressWarnings("resource")
 	public void loadSetupConfig() throws FileNotFoundException, BadConfigFormatException {
-		// read in setup txt file
 		FileReader reader = new FileReader(setupConfigFile);
 		Scanner scanner = new Scanner(reader);
 		while (scanner.hasNextLine()) {
@@ -159,7 +162,8 @@ public class Board {
 				continue;
 			}
 			String[] lineList = line.split(",");
-			if (!lineList[0].equals("Room") && !lineList[0].equals("Space")) {
+			String type = lineList[0];
+			if (!type.equals("Room") && !type.equals("Space")) {
 				throw new BadConfigFormatException("Error: Setup file is not in proper format");
 			}
 			String roomName = lineList[1].trim();
@@ -170,6 +174,9 @@ public class Board {
 	}
 	
 	
+	/*
+	 * This method loads in the board from the layout csv file
+	 */
 	@SuppressWarnings("resource")
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException {
 		// reads in the board csv file and stores in temporary board ArrayList matrix
@@ -232,8 +239,8 @@ public class Board {
 		}
 		else {
 			// if symbol has 2 characters
-			String second = entry.substring(1,2);
-			switch (second) {
+			String secondEntry = entry.substring(1,2);
+			switch (secondEntry) {
 			case "^":
 				cell.setDoorDirection(DoorDirection.UP);
 				break;
@@ -259,10 +266,13 @@ public class Board {
 				room.setLabelCell(cell);
 				break;
 			default: 
-				if (roomMap.containsKey(second.charAt(0))) {
-					Room secret = roomMap.get(second.charAt(0));
+				// if symbol is not a doorway or room center/label cell
+				// is a secret passage or an exception
+				char secondChar = secondEntry.charAt(0);
+				if (roomMap.containsKey(secondChar)) {
+					Room secret = roomMap.get(secondChar);
 					room.setSecretPassage(secret);
-					cell.setSecretPassage(second.charAt(0));
+					cell.setSecretPassage(secondChar);
 					cell.setRoom(true);
 					cell.setDoorDirection(DoorDirection.NONE);
 				}

@@ -30,7 +30,7 @@ public class BadConfigFormatException extends Exception {
 			// get current date and time for error message
 			LocalDateTime now = LocalDateTime.now();
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"); 
-			writer.write("On " + dtf.format(now) + " compiler returned error message:: ");
+			writer.write("On " + dtf.format(now) + " compiler returned error message::    ");
 			writer.write(super.getMessage() + "\n");
 			writer.close();
 		} catch (IOException e) {
