@@ -149,7 +149,6 @@ public class Board {
 	/*
 	 * this method loads in the room data from the setup text file
 	 */
-	@SuppressWarnings("resource")
 	public void loadSetupConfig() throws FileNotFoundException, BadConfigFormatException {
 		FileReader reader = new FileReader(setupConfigFile);
 		Scanner scanner = new Scanner(reader);
@@ -161,6 +160,7 @@ public class Board {
 			String[] lineList = line.split(",");
 			String type = lineList[0];
 			if (!type.equals("Room") && !type.equals("Space")) {
+				scanner.close();
 				throw new BadConfigFormatException("Error: Setup file is not in proper format");
 			}
 			String roomName = lineList[1].trim();
@@ -168,14 +168,13 @@ public class Board {
 			Room room = new Room(roomName);
 			roomMap.put(symbol, room);
 		}
-		// TODO close scanner here
+		scanner.close();
 	}
 	
 	
 	/*
 	 * This method loads in the board from the layout csv file
 	 */
-	@SuppressWarnings("resource")
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException {
 		// reads in the board csv file and stores in temporary board ArrayList matrix
 		ArrayList<List<String>> tempBoard = new ArrayList<>();
@@ -189,11 +188,12 @@ public class Board {
 			if (numCols != 0 && lineList.size() != numCols) {
 				String message = "Error: The board layout file does "
 					+ "not have the same number of columns in every row";
+				scanner.close();
 				throw new BadConfigFormatException(message);
 			}
 			numCols = lineList.size();
 		}
-		//TODO Close scanner here
+		scanner.close();
 		
 		// set number of rows and columns based on ArrayList matrix
 		NUM_ROWS = tempBoard.size();

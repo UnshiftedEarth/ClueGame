@@ -33,6 +33,7 @@ public class BadConfigFormatException extends Exception {
 			writer.write("On " + dtf.format(now) + " compiler returned error message::    ");
 			writer.write(super.getMessage() + "\n");
 			writer.close();
+			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
