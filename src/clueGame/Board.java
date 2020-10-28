@@ -110,21 +110,22 @@ public class Board {
 					BoardCell left = grid[i][j-1];
 					checkAdjacent(cell, left, DoorDirection.LEFT);
 				}
-				checkAdjacencyRoomCenter(cell, room);
+				if (cell.isRoomCenter()) {
+					checkAdjacencyRoomCenter(cell, room);
+				}
 			}
 		}
 	}
 	
 	// method to check adjacencies of room centers
 	private void checkAdjacencyRoomCenter(BoardCell cell, Room room) {
-		if (cell.isRoomCenter()) { // TODO move if statement to parent method
+		 // TODO move if statement to parent method
 			for (BoardCell c : room.getDoorList()) {
 				if (!c.isOccupied()) {
 					cell.addToAdjList(c);
 				}
 			}
-		}
-		if (room.getSecretPassage() != null && cell.isRoomCenter()) {
+		if (room.getSecretPassage() != null) {
 			cell.addToAdjList(room.getSecretPassage().getCenterCell());
 		}
 	}
