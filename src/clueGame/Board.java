@@ -39,6 +39,7 @@ public class Board {
 			e.printStackTrace();
 		}
 		// door lists must be created before calculating adjacencies
+		// add finally block 
 		calcDoorLists();
 		calcAdjacencies();
 	}
@@ -64,7 +65,7 @@ public class Board {
 		case NONE:
 			return;
 		case UP:
-			temp = grid[i-1][j];
+			temp = grid[i-1][j]; // refactor to method
 			room = roomMap.get(temp.getInitial());
 			room.addToDoorList(cell);
 			break;
@@ -118,7 +119,7 @@ public class Board {
 	
 	// method to check adjacencies of room centers
 	private void checkAdjacencyRoomCenter(BoardCell cell, Room room) {
-		if (cell.isRoomCenter()) {
+		if (cell.isRoomCenter()) { // move if statement to parent method
 			for (BoardCell c : room.getDoorList()) {
 				if (!c.isOccupied()) {
 					cell.addToAdjList(c);
@@ -171,6 +172,7 @@ public class Board {
 			Room room = new Room(roomName);
 			roomMap.put(symbol, room);
 		}
+		//close scanner
 	}
 	
 	
