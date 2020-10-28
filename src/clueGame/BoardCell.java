@@ -18,7 +18,7 @@ public class BoardCell implements Comparable<BoardCell> {
 		super();
 		this.row = row;
 		this.col = col;
-		adjList = new HashSet<BoardCell>();
+		adjList = new HashSet<>();
 	}
 	
 	

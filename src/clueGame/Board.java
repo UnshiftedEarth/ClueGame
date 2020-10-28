@@ -23,9 +23,9 @@ public class Board {
 
 	private Board() {
 		super();
-		targets = new HashSet<BoardCell>();
-		visited = new HashSet<BoardCell>();
-		roomMap = new HashMap<Character, Room>();
+		targets = new HashSet<>();
+		visited = new HashSet<>();
+		roomMap = new HashMap<>();
 	}
 
 	/*

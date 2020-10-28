@@ -15,7 +15,7 @@ public class Room {
 	public Room(String name) {
 		super();
 		this.name = name;
-		doorList = new HashSet<BoardCell>();
+		doorList = new HashSet<>();
 	}
 	
 	public String getName() {
