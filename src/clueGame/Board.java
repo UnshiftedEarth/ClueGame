@@ -37,9 +37,9 @@ public class Board {
 			loadConfigFiles();
 		} catch (BadConfigFormatException | FileNotFoundException e) {
 			e.printStackTrace();
+			return;
 		}
 		// door lists must be created before calculating adjacencies
-		// TODO add finally block 
 		calcDoorLists();
 		calcAdjacencies();
 	}
