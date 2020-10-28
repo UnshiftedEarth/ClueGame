@@ -7,10 +7,13 @@ import java.util.Set;
 public class BoardCell implements Comparable<BoardCell> {
 	
 	private int row, col;
-	private char initial, secretPassage;
+	private char initial;
+	private char secretPassage;
 	private DoorDirection doorDirection;
-	private boolean roomLabel, roomCenter;
-	private boolean isOccupied, isRoom;
+	private boolean roomLabel;
+	private boolean roomCenter;
+	private boolean isOccupied;
+	private boolean isRoom;
 	private Set<BoardCell> adjList;
 	
 	

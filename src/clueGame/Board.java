@@ -182,7 +182,7 @@ public class Board {
 	@SuppressWarnings("resource")
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException {
 		// reads in the board csv file and stores in temporary board ArrayList matrix
-		ArrayList<List<String>> tempBoard = new ArrayList<List<String>>();
+		ArrayList<List<String>> tempBoard = new ArrayList<>();
 		int numCols = 0;
 		FileReader reader = new FileReader(layoutConfigFile);
 		Scanner scanner = new Scanner(reader);
