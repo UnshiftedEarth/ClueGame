@@ -65,26 +65,24 @@ public class Board {
 		case NONE:
 			return;
 		case UP:
-			temp = grid[i-1][j]; // refactor to method
-			room = roomMap.get(temp.getInitial());
-			room.addToDoorList(cell);
+			addDoorList(i-1, j, cell);
 			break;
 		case DOWN:
-			temp = grid[i+1][j];
-			room = roomMap.get(temp.getInitial());
-			room.addToDoorList(cell);
+			addDoorList(i+1, j, cell);
 			break;
 		case RIGHT:
-			temp = grid[i][j+1];
-			room = roomMap.get(temp.getInitial());
-			room.addToDoorList(cell);
+			addDoorList(i, j+1, cell);
 			break;
 		case LEFT:
-			temp = grid[i][j-1];
-			room = roomMap.get(temp.getInitial());
-			room.addToDoorList(cell);
+			addDoorList(i, j-1, cell);
 			break;
 		}
+	}
+
+	private void addDoorList(int i, int j, BoardCell cell) {
+		BoardCell temp = grid[i][j]; 
+		Room room = roomMap.get(temp.getInitial());
+		room.addToDoorList(cell);
 	}
 	
 	
@@ -119,7 +117,7 @@ public class Board {
 	
 	// method to check adjacencies of room centers
 	private void checkAdjacencyRoomCenter(BoardCell cell, Room room) {
-		if (cell.isRoomCenter()) { // move if statement to parent method
+		if (cell.isRoomCenter()) { // TODO move if statement to parent method
 			for (BoardCell c : room.getDoorList()) {
 				if (!c.isOccupied()) {
 					cell.addToAdjList(c);
@@ -172,7 +170,7 @@ public class Board {
 			Room room = new Room(roomName);
 			roomMap.put(symbol, room);
 		}
-		//close scanner
+		// TODO close scanner
 	}
 	
 	
