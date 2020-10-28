@@ -59,8 +59,6 @@ public class Board {
 	private void addToDoorList(int i, int j) {
 		BoardCell cell = grid[i][j];
 		DoorDirection door = cell.getDoorDirection();
-		BoardCell temp;
-		Room room;
 		switch (door) {
 		case NONE:
 			return;
@@ -119,12 +117,11 @@ public class Board {
 	
 	// method to check adjacencies of room centers
 	private void checkAdjacencyRoomCenter(BoardCell cell, Room room) {
-		 // TODO move if statement to parent method
-			for (BoardCell c : room.getDoorList()) {
-				if (!c.isOccupied()) {
-					cell.addToAdjList(c);
-				}
+		for (BoardCell c : room.getDoorList()) {
+			if (!c.isOccupied()) {
+				cell.addToAdjList(c);
 			}
+		}
 		if (room.getSecretPassage() != null) {
 			cell.addToAdjList(room.getSecretPassage().getCenterCell());
 		}
@@ -171,7 +168,7 @@ public class Board {
 			Room room = new Room(roomName);
 			roomMap.put(symbol, room);
 		}
-		// TODO close scanner
+		// TODO close scanner here
 	}
 	
 	
@@ -196,6 +193,7 @@ public class Board {
 			}
 			numCols = lineList.size();
 		}
+		//TODO Close scanner here
 		
 		// set number of rows and columns based on ArrayList matrix
 		NUM_ROWS = tempBoard.size();
