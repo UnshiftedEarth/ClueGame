@@ -23,9 +23,9 @@ public class Board {
 
 	private Board() {
 		super();
-		targets = new HashSet<BoardCell>();
-		visited = new HashSet<BoardCell>();
-		roomMap = new HashMap<Character, Room>();
+		targets = new HashSet<>();
+		visited = new HashSet<>();
+		roomMap = new HashMap<>();
 	}
 
 	/*
@@ -37,6 +37,7 @@ public class Board {
 			loadConfigFiles();
 		} catch (BadConfigFormatException | FileNotFoundException e) {
 			e.printStackTrace();
+			return;
 		}
 		// door lists must be created before calculating adjacencies
 		calcDoorLists();
@@ -58,32 +59,28 @@ public class Board {
 	private void addToDoorList(int i, int j) {
 		BoardCell cell = grid[i][j];
 		DoorDirection door = cell.getDoorDirection();
-		BoardCell temp;
-		Room room;
 		switch (door) {
 		case NONE:
 			return;
 		case UP:
-			temp = grid[i-1][j];
-			room = roomMap.get(temp.getInitial());
-			room.addToDoorList(cell);
+			addDoorList(i-1, j, cell);
 			break;
 		case DOWN:
-			temp = grid[i+1][j];
-			room = roomMap.get(temp.getInitial());
-			room.addToDoorList(cell);
+			addDoorList(i+1, j, cell);
 			break;
 		case RIGHT:
-			temp = grid[i][j+1];
-			room = roomMap.get(temp.getInitial());
-			room.addToDoorList(cell);
+			addDoorList(i, j+1, cell);
 			break;
 		case LEFT:
-			temp = grid[i][j-1];
-			room = roomMap.get(temp.getInitial());
-			room.addToDoorList(cell);
+			addDoorList(i, j-1, cell);
 			break;
 		}
+	}
+
+	private void addDoorList(int i, int j, BoardCell cell) {
+		BoardCell temp = grid[i][j]; 
+		Room room = roomMap.get(temp.getInitial());
+		room.addToDoorList(cell);
 	}
 	
 	
@@ -111,21 +108,21 @@ public class Board {
 					BoardCell left = grid[i][j-1];
 					checkAdjacent(cell, left, DoorDirection.LEFT);
 				}
-				checkAdjacencyRoomCenter(cell, room);
+				if (cell.isRoomCenter()) {
+					checkAdjacencyRoomCenter(cell, room);
+				}
 			}
 		}
 	}
 	
 	// method to check adjacencies of room centers
 	private void checkAdjacencyRoomCenter(BoardCell cell, Room room) {
-		if (cell.isRoomCenter()) {
-			for (BoardCell c : room.getDoorList()) {
-				if (!c.isOccupied()) {
-					cell.addToAdjList(c);
-				}
+		for (BoardCell c : room.getDoorList()) {
+			if (!c.isOccupied()) {
+				cell.addToAdjList(c);
 			}
 		}
-		if (room.getSecretPassage() != null && cell.isRoomCenter()) {
+		if (room.getSecretPassage() != null) {
 			cell.addToAdjList(room.getSecretPassage().getCenterCell());
 		}
 	}
@@ -152,7 +149,6 @@ public class Board {
 	/*
 	 * this method loads in the room data from the setup text file
 	 */
-	@SuppressWarnings("resource")
 	public void loadSetupConfig() throws FileNotFoundException, BadConfigFormatException {
 		FileReader reader = new FileReader(setupConfigFile);
 		Scanner scanner = new Scanner(reader);
@@ -164,6 +160,7 @@ public class Board {
 			String[] lineList = line.split(",");
 			String type = lineList[0];
 			if (!type.equals("Room") && !type.equals("Space")) {
+				scanner.close();
 				throw new BadConfigFormatException("Error: Setup file is not in proper format");
 			}
 			String roomName = lineList[1].trim();
@@ -171,16 +168,16 @@ public class Board {
 			Room room = new Room(roomName);
 			roomMap.put(symbol, room);
 		}
+		scanner.close();
 	}
 	
 	
 	/*
 	 * This method loads in the board from the layout csv file
 	 */
-	@SuppressWarnings("resource")
 	public void loadLayoutConfig() throws BadConfigFormatException, FileNotFoundException {
 		// reads in the board csv file and stores in temporary board ArrayList matrix
-		ArrayList<List<String>> tempBoard = new ArrayList<List<String>>();
+		ArrayList<List<String>> tempBoard = new ArrayList<>();
 		int numCols = 0;
 		FileReader reader = new FileReader(layoutConfigFile);
 		Scanner scanner = new Scanner(reader);
@@ -191,10 +188,12 @@ public class Board {
 			if (numCols != 0 && lineList.size() != numCols) {
 				String message = "Error: The board layout file does "
 					+ "not have the same number of columns in every row";
+				scanner.close();
 				throw new BadConfigFormatException(message);
 			}
 			numCols = lineList.size();
 		}
+		scanner.close();
 		
 		// set number of rows and columns based on ArrayList matrix
 		NUM_ROWS = tempBoard.size();
