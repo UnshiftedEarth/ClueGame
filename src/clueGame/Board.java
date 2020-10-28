@@ -39,7 +39,7 @@ public class Board {
 			e.printStackTrace();
 		}
 		// door lists must be created before calculating adjacencies
-		// add finally block 
+		// TODO add finally block 
 		calcDoorLists();
 		calcAdjacencies();
 	}

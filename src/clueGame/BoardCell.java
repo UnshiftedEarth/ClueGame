@@ -6,7 +6,8 @@ import java.util.Set;
 
 public class BoardCell implements Comparable<BoardCell> {
 	
-	private int row, col;
+	private int row;
+	private int col;
 	private char initial;
 	private char secretPassage;
 	private DoorDirection doorDirection;
@@ -60,10 +61,7 @@ public class BoardCell implements Comparable<BoardCell> {
 	}
 	
 	public boolean isDoorway() {
-		if (doorDirection == DoorDirection.NONE) {
-			return false;
-		}
-		return true;
+		return doorDirection != DoorDirection.NONE;
 	}
 	
 	public boolean isRoom() {
