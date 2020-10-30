@@ -19,6 +19,8 @@ public class Board {
 
 	private int NUM_ROWS = 0;
 	private int NUM_COLUMNS = 0;
+	
+	
 
 
 	private Board() {
@@ -312,6 +314,7 @@ public class Board {
 		}
 	}
 	
+	
 
 	//setters and getters
 	public Set<BoardCell> getTargets() {
@@ -320,6 +323,10 @@ public class Board {
 
 	public BoardCell getCell(int row, int col) {
 		return grid[row][col];
+	}
+	
+	public Card getCard(String x) {
+		return new Card();
 	}
 	
 	public Room getRoom(char room) {
@@ -350,6 +357,11 @@ public class Board {
 	public void setConfigFiles(String csv, String txt) {
 		layoutConfigFile = "./data/" + csv;
 		setupConfigFile = "./data/" + txt;
+	}
+
+	public Player getPlayer(String string) {
+		// TODO implement
+		return new HumanPlayer();
 	}
 	
 }

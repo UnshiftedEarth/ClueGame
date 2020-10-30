@@ -1,4 +1,4 @@
-//Rooms and cards
+//Rooms
 Room, Laboratory, L
 Room, Specimen Room, P
 Room, Admin, A
@@ -8,6 +8,20 @@ Room, Security, S
 Room, Electrical, E
 Room, Storage, G
 Room, Office, F
+// Players
+Player, Human, Blue
+Player, Computer, Green
+Player, Computer, Pink
+Player, Computer, Yellow
+Player, Computer, Red
+Player, Computer, Orange
+// Weapons
+Weapon, Gun
+Weapon, Knife
+Weapon, Hands
+Weapon, Spike
+Weapon, Bat
+Weapon, Bow
 // other spaces 
 Space, Hallway, H 
 Space, Unused, X

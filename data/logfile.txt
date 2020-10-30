@@ -4,3 +4,7 @@ On 2020/10/14 18:54:42 compiler returned error message::    Error: Setup file is
 On 2020/10/14 18:55:14 compiler returned error message::    Error: The board layout file does not have the same number of columns in every row
 On 2020/10/14 18:55:14 compiler returned error message::    Error: Layout refers to room not in setup file
 On 2020/10/14 18:55:14 compiler returned error message::    Error: Setup file is not in proper format
+On 2020/10/29 18:26:06 compiler returned error message::    Error: Setup file is not in proper format
+On 2020/10/29 18:30:03 compiler returned error message::    Error: Layout refers to room not in setup file
+On 2020/10/29 18:31:08 compiler returned error message::    Error: Setup file is not in proper format
+On 2020/10/29 18:34:55 compiler returned error message::    Error: Setup file is not in proper format
