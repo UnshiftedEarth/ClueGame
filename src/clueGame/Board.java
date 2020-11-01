@@ -51,6 +51,7 @@ public class Board {
 		// door lists must be created before calculating adjacencies
 		calcDoorLists();
 		calcAdjacencies();
+		dealCards();
 	}
 	
 	/*
@@ -157,7 +158,40 @@ public class Board {
 	/*
 	 * This method deals cards from the deck to the solution class and each player
 	 */
-	
+	public void dealCards() {
+		Random random = new Random();
+		ArrayList<Card> deckCopy =  new ArrayList<>();
+		ArrayList<Player> playersCopy =  new ArrayList<>();
+		deckCopy.addAll(deck);
+		playersCopy.addAll(players);
+		int rand = 0;
+		
+		//deal solution cards 
+		theAnswer.person = randomSolutionCard(deckCopy, CardType.PLAYER);
+		theAnswer.weapon = randomSolutionCard(deckCopy, CardType.WEAPON);
+		theAnswer.room = randomSolutionCard(deckCopy, CardType.ROOM);
+		
+		// deal cards in deck to all players randomly
+		int size = deckCopy.size(); 
+		int location = 0;
+		for (int i = 0; i < size; i++) {
+			rand = random.nextInt(deckCopy.size());
+			playersCopy.get(location).updateHand(deckCopy.remove(rand));
+			if (location == 5) {
+				location = -1;
+			}
+			location++;
+		}
+	}
+
+	private Card randomSolutionCard (ArrayList<Card> deckCopy, CardType type) {
+		Random random = new Random();
+		int rand = random.nextInt(deckCopy.size());
+		while (deckCopy.get(rand).getType() != type) {
+			rand = random.nextInt(deckCopy.size());
+		}
+		return deckCopy.remove(rand);
+	}
 	
 	
 	/*

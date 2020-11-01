@@ -26,6 +26,11 @@ public abstract class Player {
 	}
 	
 
+	public void updateHand(Card card) {
+		hand.add(card);
+	}
+	
+
 	// setters and getters
 	public Object getName() {
 		return name;

@@ -32,6 +32,7 @@ class GameSetupTests {
 	}
 	
 	
+	// this test ensures we correctly loaded in the weapons in the setup file
 	@Test
 	void testLoadWeapons() {
 		assertEquals(board.getCard("Gun").getName(), "Gun");
@@ -48,7 +49,8 @@ class GameSetupTests {
 		assertEquals(board.getCard("Bat").getType(), CardType.WEAPON);
 		assertEquals(board.getCard("Spike").getType(), CardType.WEAPON);
 	}
-
+	
+	// this test ensures we correctly loaded in the players in the setup file
 	@Test
 	void testLoadPlayers() {
 		assertEquals(board.getPlayer("Blue").getName(), "Blue");
@@ -65,6 +67,7 @@ class GameSetupTests {
 		assertEquals(board.getPlayer("Orange").getColor(), Color.ORANGE);
 		assertEquals(board.getPlayer("Red").getColor(), Color.RED);
 	
+		// ensuring the player types are correct
 		assertTrue(board.getPlayer("Blue") instanceof HumanPlayer);
 		assertTrue(board.getPlayer("Green") instanceof ComputerPlayer);
 		assertTrue(board.getPlayer("Yellow") instanceof ComputerPlayer);
@@ -87,6 +90,7 @@ class GameSetupTests {
 		assertEquals(board.getCard("Red").getName(), "Red");
 	}
 
+	// this test ensures we correctly loaded in the rooms in the setup file
 	@Test
 	void testLoadRooms() {
 		assertEquals(board.getCard("Laboratory").getName(), "Laboratory");
@@ -121,15 +125,18 @@ class GameSetupTests {
 		assertTrue(sol.weapon != null);
 		assertTrue(sol.room != null);
 		
+		// check the solution card type
 		assertEquals(sol.person.getType(), CardType.PLAYER);
 		assertEquals(sol.weapon.getType(), CardType.WEAPON);
 		assertEquals(sol.room.getType(), CardType.ROOM);
 		
+		//check if card is in the deck
 		assertTrue(board.getDeck().contains(sol.person));
 		assertTrue(board.getDeck().contains(sol.weapon));
 		assertTrue(board.getDeck().contains(sol.room));
 	}
 	
+	// this test ensure that cards are correctly dealt to players
 	@Test
 	public void dealCardsToPlayers() {
 		int sum = 0;
@@ -138,17 +145,21 @@ class GameSetupTests {
 		
 		for (Player player : board.getPlayers()) {
 			Set<Card> hand = player.getHand();
+			// check if each players hand has 3 cards
 			assertEquals(hand.size(), 3); 
 			for (Card card : hand) {
+				// check if cards was previously dealt
 				assertFalse(cardsSeen.contains(card));
 				cardsSeen.add(card);
+				// check if player's card is in the deck
 				assertTrue(deck.contains(card));
 			}
 			sum += hand.size();
 		}
 		
-		//ensure every card is dealt
-		assertEquals(sum, deck.size());
+		// ensure every card is dealt 
+		// players should each have 3 cards
+		assertEquals(sum, 18);
 	}
 
 }
