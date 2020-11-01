@@ -1,6 +1,6 @@
 //Rooms
 Room, Laboratory, L
-Room, Specimen Room, P
+Room, Specimen, P
 Room, Admin, A
 Room, Weapons, W
 Room, Oxygen, O
@@ -9,12 +9,12 @@ Room, Electrical, E
 Room, Storage, G
 Room, Office, F
 // Players
-Player, Human, Blue
-Player, Computer, Green
-Player, Computer, Pink
-Player, Computer, Yellow
-Player, Computer, Red
-Player, Computer, Orange
+Player, Human, Blue, blue
+Player, Computer, Green, green
+Player, Computer, Pink, pink
+Player, Computer, Yellow, yellow
+Player, Computer, Red, red
+Player, Computer, Orange, orange
 // Weapons
 Weapon, Gun
 Weapon, Knife

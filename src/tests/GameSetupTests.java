@@ -10,9 +10,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import clueGame.Board;
+import clueGame.Card;
 import clueGame.CardType;
 import clueGame.ComputerPlayer;
 import clueGame.HumanPlayer;
+import clueGame.Player;
+import clueGame.Solution;
 
 class GameSetupTests {
 	
@@ -87,7 +90,7 @@ class GameSetupTests {
 	@Test
 	void testLoadRooms() {
 		assertEquals(board.getCard("Laboratory").getName(), "Laboratory");
-		assertEquals(board.getCard("Speciman").getName(), "Speciman");
+		assertEquals(board.getCard("Specimen").getName(), "Specimen");
 		assertEquals(board.getCard("Admin").getName(), "Admin");
 		assertEquals(board.getCard("Weapons").getName(), "Weapons");
 		assertEquals(board.getCard("Oxygen").getName(), "Oxygen");
@@ -97,7 +100,7 @@ class GameSetupTests {
 		assertEquals(board.getCard("Office").getName(), "Office");
 		
 		assertEquals(board.getCard("Laboratory").getType(), CardType.ROOM);
-		assertEquals(board.getCard("Speciman").getType(), CardType.ROOM);
+		assertEquals(board.getCard("Specimen").getType(), CardType.ROOM);
 		assertEquals(board.getCard("Admin").getType(), CardType.ROOM);
 		assertEquals(board.getCard("Weapons").getType(), CardType.ROOM);
 		assertEquals(board.getCard("Oxygen").getType(), CardType.ROOM);
@@ -105,6 +108,10 @@ class GameSetupTests {
 		assertEquals(board.getCard("Electrical").getType(), CardType.ROOM);
 		assertEquals(board.getCard("Storage").getType(), CardType.ROOM);
 		assertEquals(board.getCard("Office").getType(), CardType.ROOM);
+		
+		// check deck size should be 21
+		Set<Card> deck = board.getDeck();
+		assertEquals(deck.size(), 21);
 	}
-
+	
 }

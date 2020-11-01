@@ -7,6 +7,10 @@ public class ComputerPlayer extends Player {
 		super();
 	}
 	
+	public ComputerPlayer(String name, String color) {
+		super(name, color);
+	}
+	
 	// setters and getters 
 	
 }

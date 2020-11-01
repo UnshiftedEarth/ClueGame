@@ -13,6 +13,10 @@ public class Board {
 
 	private String layoutConfigFile;
 	private String setupConfigFile;
+	
+	private static Solution theAnswer;
+	private Set<Card> deck;
+	private Set<Player> players;
 
 	private Map<Character, Room> roomMap;
 	private static Board instance = new Board();
@@ -28,6 +32,9 @@ public class Board {
 		targets = new HashSet<>();
 		visited = new HashSet<>();
 		roomMap = new HashMap<>();
+		deck = new HashSet<>();
+		players = new HashSet<>();
+		theAnswer = new Solution();
 	}
 
 	/*
@@ -147,6 +154,11 @@ public class Board {
 		loadLayoutConfig();
 	}
 	
+	/*
+	 * This method deals cards from the deck to the solution class and each player
+	 */
+	
+	
 	
 	/*
 	 * this method loads in the room data from the setup text file
@@ -161,14 +173,43 @@ public class Board {
 			}
 			String[] lineList = line.split(",");
 			String type = lineList[0];
-			if (!type.equals("Room") && !type.equals("Space")) {
+			if (!type.equals("Room") && !type.equals("Space") && !type.equals("Player") && !type.equals("Weapon")) {
 				scanner.close();
 				throw new BadConfigFormatException("Error: Setup file is not in proper format");
 			}
-			String roomName = lineList[1].trim();
-			char symbol = lineList[2].trim().charAt(0);
-			Room room = new Room(roomName);
-			roomMap.put(symbol, room);
+			else if (type.equals("Space")) {
+				String roomName = lineList[1].trim();
+				char symbol = lineList[2].trim().charAt(0);
+				Room room = new Room(roomName);
+				roomMap.put(symbol, room);
+			}
+			else if (type.equals("Room")) {
+				String roomName = lineList[1].trim();
+				char symbol = lineList[2].trim().charAt(0);
+				Room room = new Room(roomName);
+				roomMap.put(symbol, room);
+				deck.add(new Card(roomName, CardType.ROOM));
+			}
+			else if (type.equals("Player")) {
+				String playerType = lineList[1].trim();
+				String color = lineList[3].trim();
+				String name = lineList[2].trim();
+				if (playerType.equals("Human")) {
+					players.add(new HumanPlayer(name, color));
+				}
+				else if (playerType.equals("Computer")) {
+					players.add(new ComputerPlayer(name, color));
+				}
+				else {
+					scanner.close();
+					throw new BadConfigFormatException("Error: Setup file is not in proper format");
+				}
+				deck.add(new Card(name, CardType.PLAYER));
+			}
+			else if (type.equals("Weapon")) {
+				String weaponName = lineList[1].trim();
+				deck.add(new Card(weaponName, CardType.WEAPON));
+			}
 		}
 		scanner.close();
 	}
@@ -326,7 +367,21 @@ public class Board {
 	}
 	
 	public Card getCard(String x) {
-		return new Card();
+		for (Card card : deck) {
+			if (card.getName().equals(x)) {
+				return card;
+			}
+		}
+		return null;
+	}
+	
+	public Player getPlayer(String x) {
+		for (Player player : players) {
+			if (player.getName().equals(x)) {
+				return player;
+			}
+		}
+		return null;
 	}
 	
 	public Room getRoom(char room) {
@@ -341,7 +396,19 @@ public class Board {
 		BoardCell cell = grid[r][c];
 		return cell.getAdjList();
 	}
-
+	
+	public Set<Card> getDeck() {
+		return deck;
+	}
+	
+	public Solution getSolution() {
+		return theAnswer;
+	}
+	
+	public Set<Player> getPlayers() {
+		return players;
+	}
+	
 	public static Board getInstance() {
 		return instance;
 	}
@@ -359,9 +426,4 @@ public class Board {
 		setupConfigFile = "./data/" + txt;
 	}
 
-	public Player getPlayer(String string) {
-		// TODO implement
-		return new HumanPlayer();
-	}
-	
 }

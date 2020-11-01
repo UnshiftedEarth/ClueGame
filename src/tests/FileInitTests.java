@@ -38,7 +38,7 @@ class FileInitTests {
 		// from the hash, including the first and last in the file and a few others
 		// from among us map
 		assertEquals("Laboratory", board.getRoom('L').getName() );
-		assertEquals("Specimen Room", board.getRoom('P').getName() );
+		assertEquals("Specimen", board.getRoom('P').getName() );
 		assertEquals("Admin", board.getRoom('A').getName() );
 		assertEquals("Weapons", board.getRoom('W').getName() );
 		assertEquals("Oxygen", board.getRoom('O').getName() );
@@ -97,7 +97,7 @@ class FileInitTests {
 		BoardCell cell = board.getCell(22, 23);
 		Room room = board.getRoom( cell ) ;
 		assertTrue( room != null );
-		assertEquals( room.getName(), "Specimen Room" ) ;
+		assertEquals( room.getName(), "Specimen" ) ;
 		assertFalse( cell.isLabel() );
 		assertFalse( cell.isRoomCenter() ) ;
 		assertFalse( cell.isDoorway()) ;
