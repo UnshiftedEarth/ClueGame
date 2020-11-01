@@ -26,7 +26,9 @@ class GameSetupTests {
 		// Board is singleton, get the only instance
 		board = Board.getInstance();
 		// set the file names to use my config files
-		board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");		
+		board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");	
+		// clear the board
+		board.clearDeck();
 		// Initialize will load config files 
 		board.initialize();
 	}
@@ -117,7 +119,8 @@ class GameSetupTests {
 		Set<Card> deck = board.getDeck();
 		assertEquals(deck.size(), 21);
 	}
-
+	
+	// this test ensures the correct cards are dealt to the solution
 	@Test 
 	public void dealCardsToSolution() {
 		Solution sol = board.getSolution();
@@ -136,7 +139,7 @@ class GameSetupTests {
 		assertTrue(board.getDeck().contains(sol.room));
 	}
 	
-	// this test ensure that cards are correctly dealt to players
+	// this test ensures that cards are correctly dealt to players
 	@Test
 	public void dealCardsToPlayers() {
 		int sum = 0;
@@ -148,7 +151,7 @@ class GameSetupTests {
 			// check if each players hand has 3 cards
 			assertEquals(hand.size(), 3); 
 			for (Card card : hand) {
-				// check if cards was previously dealt
+				// check if card was previously dealt to another player
 				assertFalse(cardsSeen.contains(card));
 				cardsSeen.add(card);
 				// check if player's card is in the deck
@@ -158,7 +161,7 @@ class GameSetupTests {
 		}
 		
 		// ensure every card is dealt 
-		// players should each have 3 cards
+		// 6 players should have 3 cards each
 		assertEquals(sum, 18);
 	}
 

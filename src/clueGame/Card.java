@@ -14,6 +14,13 @@ public class Card {
 		this.cardName = cardName;
 		this.type = type;
 	}
+	
+	public boolean equals(Card target) {
+		if (target.getName().equals(cardName) && target.getType() == type) {
+			return true;
+		}
+		return false;
+	}
 
 
 	// setters and getters 

@@ -1,4 +1,4 @@
-// Rooms and room cards
+// Rooms
 Room, Conservatory, C
 Room, Kitchen, K
 Room, Ballroom, B
@@ -8,6 +8,20 @@ Room, Study, S
 Room, Dining Room, D
 Room, Lounge, O
 Room, Hall, H
+// Players
+Player, Human, Miss Scarlet, red
+Player, Computer, Mrs. White, white
+Player, Computer, Mrs. Peacock, blue
+Player, Computer, Professor Plum, magenta
+Player, Computer, Mr. Green, green
+Player, Computer, Colonel Mustard, yellow
+// Weapons
+Weapon, Knife
+Weapon, Revolver
+Weapon, Rope
+Weapon, Wrench
+Weapon, Candlestick
+Weapon, Lead Pipe
 // other spaces on board
 Space, Unused, X
 Space, Walkway, W

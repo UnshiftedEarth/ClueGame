@@ -3,6 +3,7 @@ package clueGame;
 public class HumanPlayer extends Player {
 	
 	
+	
 	public HumanPlayer() {
 		super();
 	}
@@ -12,5 +13,4 @@ public class HumanPlayer extends Player {
 	}
 	
 	// setters and getters 
-	
 }

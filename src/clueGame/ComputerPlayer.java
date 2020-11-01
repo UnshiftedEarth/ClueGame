@@ -2,6 +2,7 @@ package clueGame;
 
 public class ComputerPlayer extends Player {
 	
+
 	
 	public ComputerPlayer() {
 		super();
@@ -12,5 +13,4 @@ public class ComputerPlayer extends Player {
 	}
 	
 	// setters and getters 
-	
 }

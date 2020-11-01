@@ -183,19 +183,20 @@ public class Board {
 			location++;
 		}
 	}
-
-	private Card randomSolutionCard (ArrayList<Card> deckCopy, CardType type) {
+	
+	// helper method to find a random card for a specified type
+	private Card randomSolutionCard (ArrayList<Card> deck, CardType type) {
 		Random random = new Random();
-		int rand = random.nextInt(deckCopy.size());
-		while (deckCopy.get(rand).getType() != type) {
-			rand = random.nextInt(deckCopy.size());
+		int rand = random.nextInt(deck.size());
+		while (deck.get(rand).getType() != type) {
+			rand = random.nextInt(deck.size());
 		}
-		return deckCopy.remove(rand);
+		return deck.remove(rand);
 	}
 	
 	
 	/*
-	 * this method loads in the room data from the setup text file
+	 * this method loads in the room, weapons and player data from the setup text file
 	 */
 	public void loadSetupConfig() throws FileNotFoundException, BadConfigFormatException {
 		FileReader reader = new FileReader(setupConfigFile);
@@ -213,15 +214,11 @@ public class Board {
 			}
 			else if (type.equals("Space")) {
 				String roomName = lineList[1].trim();
-				char symbol = lineList[2].trim().charAt(0);
-				Room room = new Room(roomName);
-				roomMap.put(symbol, room);
+				loadSpace(lineList, roomName);
 			}
 			else if (type.equals("Room")) {
 				String roomName = lineList[1].trim();
-				char symbol = lineList[2].trim().charAt(0);
-				Room room = new Room(roomName);
-				roomMap.put(symbol, room);
+				loadSpace(lineList, roomName);
 				deck.add(new Card(roomName, CardType.ROOM));
 			}
 			else if (type.equals("Player")) {
@@ -246,6 +243,13 @@ public class Board {
 			}
 		}
 		scanner.close();
+	}
+	
+	// help method to load room and space
+	private void loadSpace(String[] lineList, String roomName) {
+		char symbol = lineList[2].trim().charAt(0);
+		Room room = new Room(roomName);
+		roomMap.put(symbol, room);
 	}
 	
 	
@@ -389,7 +393,12 @@ public class Board {
 		}
 	}
 	
-	
+	// clears the deck and players
+	public void clearDeck() {
+		deck.clear();
+		theAnswer = new Solution();
+		players.clear();
+	}
 
 	//setters and getters
 	public Set<BoardCell> getTargets() {
