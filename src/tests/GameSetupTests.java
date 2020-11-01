@@ -113,5 +113,42 @@ class GameSetupTests {
 		Set<Card> deck = board.getDeck();
 		assertEquals(deck.size(), 21);
 	}
+
+	@Test 
+	public void dealCardsToSolution() {
+		Solution sol = board.getSolution();
+		assertTrue(sol.person != null);
+		assertTrue(sol.weapon != null);
+		assertTrue(sol.room != null);
+		
+		assertEquals(sol.person.getType(), CardType.PLAYER);
+		assertEquals(sol.weapon.getType(), CardType.WEAPON);
+		assertEquals(sol.room.getType(), CardType.ROOM);
+		
+		assertTrue(board.getDeck().contains(sol.person));
+		assertTrue(board.getDeck().contains(sol.weapon));
+		assertTrue(board.getDeck().contains(sol.room));
+	}
 	
+	@Test
+	public void dealCardsToPlayers() {
+		int sum = 0;
+		ArrayList<Card> cardsSeen = new ArrayList<>();
+		Set<Card> deck = board.getDeck();
+		
+		for (Player player : board.getPlayers()) {
+			Set<Card> hand = player.getHand();
+			assertEquals(hand.size(), 3); 
+			for (Card card : hand) {
+				assertFalse(cardsSeen.contains(card));
+				cardsSeen.add(card);
+				assertTrue(deck.contains(card));
+			}
+			sum += hand.size();
+		}
+		
+		//ensure every card is dealt
+		assertEquals(sum, deck.size());
+	}
+
 }
