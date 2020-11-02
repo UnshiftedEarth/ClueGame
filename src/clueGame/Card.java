@@ -6,7 +6,8 @@ public class Card {
 	private CardType type;
 	
 	public Card() {
-		
+		this.cardName = "";
+		type = CardType.WEAPON;
 	}
 	
 	public Card(String cardName, CardType type) {

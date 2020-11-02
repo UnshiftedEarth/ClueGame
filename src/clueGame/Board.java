@@ -399,7 +399,21 @@ public class Board {
 		theAnswer = new Solution();
 		players.clear();
 	}
+	
+	/*
+	 * Method to check the accusation with the solution, parameters must be in 
+	 * player, room, weapon format
+	 */
+	public boolean checkAccusation(Card player, Card room, Card weapon) {
+		//TODO write
+		return false;
+	}
 
+	public Card handleSuggestion() {
+		// TODO write
+		return new Card();
+	}
+	
 	//setters and getters
 	public Set<BoardCell> getTargets() {
 		return targets;

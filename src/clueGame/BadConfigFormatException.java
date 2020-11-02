@@ -12,12 +12,12 @@ public class BadConfigFormatException extends Exception {
 
 	public BadConfigFormatException() {
 		super("Error: Something is wrong with your configuration files. Unable to initalize Clue board.");
-		writeLog();
+		//writeLog();
 	}
 	
 	public BadConfigFormatException(String message) {
 		super(message);
-		writeLog();
+		//writeLog();
 	}
 	
 	private void writeLog() {

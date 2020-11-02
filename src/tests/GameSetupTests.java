@@ -27,7 +27,7 @@ class GameSetupTests {
 		board = Board.getInstance();
 		// set the file names to use my config files
 		board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");	
-		// clear the board
+		// clear the deck
 		board.clearDeck();
 		// Initialize will load config files 
 		board.initialize();

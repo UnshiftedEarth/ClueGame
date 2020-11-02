@@ -12,6 +12,7 @@ public abstract class Player {
 	private int row;
 	private int column;
 	private Set<Card> hand;
+	private Set<Card> seenCards;
 	
 	
 	public Player() {
@@ -28,6 +29,15 @@ public abstract class Player {
 
 	public void updateHand(Card card) {
 		hand.add(card);
+	}
+	
+	public Card disproveSuggestion() {
+		//TODO write
+		return new Card();
+	}
+	
+	public void updateSeen(Card seenCard) {
+		//TODO write
 	}
 	
 
