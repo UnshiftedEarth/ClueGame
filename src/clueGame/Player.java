@@ -31,7 +31,7 @@ public abstract class Player {
 		hand.add(card);
 	}
 	
-	public Card disproveSuggestion() {
+	public Card disproveSuggestion(Card player, Card room, Card weapon) {
 		//TODO write
 		return new Card();
 	}
