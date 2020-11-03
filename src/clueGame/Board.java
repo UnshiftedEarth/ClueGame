@@ -405,8 +405,11 @@ public class Board {
 	 * player, room, weapon format
 	 */
 	public boolean checkAccusation(Card player, Card room, Card weapon) {
-		//TODO write
-		return false;
+		boolean personB = player.equals(theAnswer.person);
+		boolean roomB = room.equals(theAnswer.room);
+		boolean weaponB = weapon.equals(theAnswer.weapon);
+		
+		return personB && roomB && weaponB;
 	}
 
 	public Card handleSuggestion() {

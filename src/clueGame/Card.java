@@ -17,10 +17,7 @@ public class Card {
 	}
 	
 	public boolean equals(Card target) {
-		if (target.getName().equals(cardName) && target.getType() == type) {
-			return true;
-		}
-		return false;
+		return target.getName().equals(cardName) && target.getType() == type;
 	}
 
 
