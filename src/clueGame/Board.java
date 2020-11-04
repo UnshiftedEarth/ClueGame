@@ -413,10 +413,32 @@ public class Board {
 	}
 
 	public Card handleSuggestion(Player player, Card person, Card room, Card weapon) {
-		// TODO write
-		return new Card();
+		ArrayList<Player> playerOrder = getPlayerOrder(player);
+		for (Player p : playerOrder) {
+			if (p.equals(player)) {
+				continue;
+			}
+			Card disprove = p.disproveSuggestion(person, room, weapon);
+			if (disprove != null) {
+				return disprove;
+			}
+		}
+		return null;
 	}
 	
+	private ArrayList<Player> getPlayerOrder(Player player) {
+		ArrayList<Player> order = new ArrayList<>();
+		int j = players.indexOf(player);
+		for (int i = 0; i < players.size(); i++) {
+			order.add(players.get(j));
+			if (j == players.size()-1) {
+				j = -1;
+			}
+			j++;
+		}
+		return order;
+	}
+
 	//setters and getters
 	public Set<BoardCell> getTargets() {
 		return targets;

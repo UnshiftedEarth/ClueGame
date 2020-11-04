@@ -107,10 +107,7 @@ class GameSolutionTest {
 		players.add(comp3);
 		board.setPlayers(players);
 		
-		human.updateHand(new Card());
-		comp1.updateHand(new Card());
-		comp2.updateHand(new Card());
-		comp3.updateHand(new Card());
+		
 		// ensure that null is returned because no match found
 		assertTrue(board.handleSuggestion(human, person, room, weapon) == null);
 		comp1.updateHand(person);
