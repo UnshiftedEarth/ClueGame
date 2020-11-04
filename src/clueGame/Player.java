@@ -61,6 +61,10 @@ public abstract class Player {
 		//TODO write
 	}
 	
+	public void clearHand() {
+		hand.clear();
+	}
+	
 
 	// setters and getters
 	public Object getName() {

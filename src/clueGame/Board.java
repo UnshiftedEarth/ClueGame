@@ -16,7 +16,7 @@ public class Board {
 	
 	private static Solution theAnswer;
 	private Set<Card> deck;
-	private Set<Player> players;
+	private ArrayList<Player> players;
 
 	private Map<Character, Room> roomMap;
 	private static Board instance = new Board();
@@ -33,7 +33,7 @@ public class Board {
 		visited = new HashSet<>();
 		roomMap = new HashMap<>();
 		deck = new HashSet<>();
-		players = new HashSet<>();
+		players = new ArrayList<>();
 		theAnswer = new Solution();
 	}
 
@@ -412,7 +412,7 @@ public class Board {
 		return personB && roomB && weaponB;
 	}
 
-	public Card handleSuggestion() {
+	public Card handleSuggestion(Player player, Card person, Card room, Card weapon) {
 		// TODO write
 		return new Card();
 	}
@@ -465,7 +465,7 @@ public class Board {
 		return theAnswer;
 	}
 	
-	public Set<Player> getPlayers() {
+	public ArrayList<Player> getPlayers() {
 		return players;
 	}
 	
@@ -484,6 +484,10 @@ public class Board {
 	public void setConfigFiles(String csv, String txt) {
 		layoutConfigFile = "./data/" + csv;
 		setupConfigFile = "./data/" + txt;
+	}
+
+	public void setPlayers(ArrayList<Player> players) {
+		this.players = players;
 	}
 
 }
