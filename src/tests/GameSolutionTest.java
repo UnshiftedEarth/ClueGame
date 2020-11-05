@@ -46,13 +46,13 @@ class GameSolutionTest {
 		sol.person = person;
 		sol.room = room;
 		sol.weapon = weapon;
-		
-		assertTrue(board.checkAccusation(person, room, weapon));
-		assertFalse(board.checkAccusation(new Card(), new Card(), new Card()));
-		assertFalse(board.checkAccusation(person, room, new Card("Spike", CardType.WEAPON)));
-		assertFalse(board.checkAccusation(person, new Card("Laboratory", CardType.ROOM), weapon));
-		assertFalse(board.checkAccusation(new Card("Yellow", CardType.PLAYER), room, weapon));
-		assertFalse(board.checkAccusation(room, weapon, person));
+		// ensure that accusation is only correct if all three cards are correct
+		assertTrue(board.checkAccusation(new Solution(person, room, weapon)));
+		assertFalse(board.checkAccusation(new Solution(new Card(), new Card(), new Card())));
+		assertFalse(board.checkAccusation(new Solution(person, room, new Card("Spike", CardType.WEAPON))));
+		assertFalse(board.checkAccusation(new Solution(person, new Card("Laboratory", CardType.ROOM), weapon)));
+		assertFalse(board.checkAccusation(new Solution(new Card("Yellow", CardType.PLAYER), room, weapon)));
+		assertFalse(board.checkAccusation(new Solution(room, weapon, person)));
 	}
 	
 	// This method tests the disproveSuggestion() method
@@ -65,17 +65,17 @@ class GameSolutionTest {
 		player.updateHand(weapon);
 		
 		// ensure each card is returned, only card in hand that matches suggestion
-		assertEquals(person, player.disproveSuggestion(person, new Card(), new Card()));
-		assertEquals(room, player.disproveSuggestion(new Card(), room, new Card()));
-		assertEquals(weapon, player.disproveSuggestion(new Card(), new Card(), weapon));
+		assertEquals(person, player.disproveSuggestion(new Solution(person, new Card(), new Card())));
+		assertEquals(room, player.disproveSuggestion(new Solution(new Card(), room, new Card())));
+		assertEquals(weapon, player.disproveSuggestion(new Solution(new Card(), new Card(), weapon)));
 		// ensure null with no matching cards
-		assertEquals(null, player.disproveSuggestion(new Card(), new Card(), new Card()));
+		assertEquals(null, player.disproveSuggestion(new Solution(new Card(), new Card(), new Card())));
 		
 		int sum1 = 0;
 		int sum2 = 0; 
 		int sum3 = 0;
 		for (int i = 0; i < 20; i++) {
-			Card returned = player.disproveSuggestion(person, room, weapon);
+			Card returned = player.disproveSuggestion(new Solution(person, room, weapon));
 			if (returned.getType() == person.getType()) {
 				sum1++;
 			}
@@ -109,25 +109,26 @@ class GameSolutionTest {
 		
 		
 		// ensure that null is returned because no match found
-		assertTrue(board.handleSuggestion(human, person, room, weapon) == null);
+		Solution suggestion = new Solution(person, room, weapon);
+		assertTrue(board.handleSuggestion(human, suggestion) == null);
 		comp1.updateHand(person);
-		assertTrue(board.handleSuggestion(comp2, new Card(), room, weapon) == null);
+		assertTrue(board.handleSuggestion(comp2, new Solution(new Card(), room, weapon)) == null);
 		comp1.clearHand();
 		
 		//ensure that null is returned if person making suggestion has matching card
 		human.updateHand(person);
-		assertTrue(board.handleSuggestion(human, person, room, weapon) == null);
+		assertTrue(board.handleSuggestion(human, suggestion) == null);
 		human.clearHand();
 		comp3.updateHand(person);
 		comp3.updateHand(room);
 		comp3.updateHand(weapon);
-		assertTrue(board.handleSuggestion(comp3, person, room, weapon) == null);
+		assertTrue(board.handleSuggestion(comp3, suggestion) == null);
 		comp3.clearHand();
 
 		//ensure that players are queried in order
 		comp3.updateHand(room);
 		comp1.updateHand(weapon);
-		assertTrue(board.handleSuggestion(human, person, room, weapon) == weapon);
+		assertTrue(board.handleSuggestion(human, suggestion) == weapon);
 		comp1.clearHand();
 		comp3.clearHand();
 		
@@ -136,7 +137,7 @@ class GameSolutionTest {
 		comp2.updateHand(person);
 		human.updateHand(weapon);
 		comp1.updateHand(room);
-		assertTrue(board.handleSuggestion(comp2, person, room, weapon) == weapon);
+		assertTrue(board.handleSuggestion(comp2, suggestion) == weapon);
 		comp2.clearHand();
 		human.clearHand();
 	}

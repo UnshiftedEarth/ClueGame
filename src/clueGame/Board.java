@@ -404,7 +404,11 @@ public class Board {
 	 * Method to check the accusation with the solution, parameters must be in 
 	 * player, room, weapon format
 	 */
-	public boolean checkAccusation(Card player, Card room, Card weapon) {
+	public boolean checkAccusation(Solution accusation) {
+		Card player = accusation.person;
+		Card room = accusation.room;
+		Card weapon = accusation.weapon;
+		
 		boolean personB = player.equals(theAnswer.person);
 		boolean roomB = room.equals(theAnswer.room);
 		boolean weaponB = weapon.equals(theAnswer.weapon);
@@ -412,13 +416,16 @@ public class Board {
 		return personB && roomB && weaponB;
 	}
 
-	public Card handleSuggestion(Player player, Card person, Card room, Card weapon) {
+	public Card handleSuggestion(Player player, Solution suggestion) {
+		Card person = suggestion.person;
+		Card room = suggestion.room;
+		Card weapon = suggestion.weapon;
 		ArrayList<Player> playerOrder = getPlayerOrder(player);
 		for (Player p : playerOrder) {
 			if (p.equals(player)) {
 				continue;
 			}
-			Card disprove = p.disproveSuggestion(person, room, weapon);
+			Card disprove = p.disproveSuggestion(suggestion);
 			if (disprove != null) {
 				return disprove;
 			}

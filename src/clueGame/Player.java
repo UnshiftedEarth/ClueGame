@@ -38,7 +38,10 @@ public abstract class Player {
 	 * Looks for matches in players hand to disprove a suggestion
 	 * returns null if no matches found
 	 */
-	public Card disproveSuggestion(Card player, Card room, Card weapon) {
+	public Card disproveSuggestion(Solution suggestion) {
+		Card player = suggestion.person;
+		Card room = suggestion.room;
+		Card weapon = suggestion.weapon;
 		ArrayList<Card> match = new ArrayList<>();
 		// create a list of cards in hand that match the suggestion
 		for (Card card : hand) {
