@@ -14,12 +14,13 @@ public abstract class Player {
 	private int row;
 	private int column;
 	private Set<Card> hand;
-	private Set<Card> seenCards;
+	protected Set<Card> seenCards;
 	
 	
 	public Player() {
 		super();
 		hand = new HashSet<>();
+		seenCards = new HashSet<>();
 	}
 	
 	public Player(String name, String color) {
@@ -58,11 +59,15 @@ public abstract class Player {
 	}
 	
 	public void updateSeen(Card seenCard) {
-		//TODO write
+		seenCards.add(seenCard);
 	}
 	
 	public void clearHand() {
 		hand.clear();
+	}
+	
+	public void clearSeen() {
+		seenCards.clear();
 	}
 	
 
