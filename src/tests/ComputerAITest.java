@@ -92,5 +92,28 @@ class ComputerAITest {
 		assertTrue(sum3 > 0);
 		assertTrue(sum4 > 0);
 	}
+	
+	/*
+	 *  this method tests that the computer correctly creates a suggestion
+	 *  and learns something
+	 */ 
+	@Test
+	public void testComputerCreateSuggestion() {
+		ComputerPlayer computer = new ComputerPlayer();
+		
+		/* weapons only
+		 * To test fill computers seenCards with 5 cards and ensure 
+		 * the last card is suggestion so it learns something
+		 */
+		
+		/*
+		 * repeat test for maybe players?
+		 */
+		
+		/* weapons only
+		 * test also 2 cards in seenCards list and make sure that every
+		 * other type of card is returned at least one, random test see above example
+		 */
+	}
 
 }

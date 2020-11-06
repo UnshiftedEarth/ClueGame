@@ -415,11 +415,11 @@ public class Board {
 		
 		return personB && roomB && weaponB;
 	}
-
+	
+	/*
+	 * Method to handle a suggestion and cycle through players to disprove
+	 */
 	public Card handleSuggestion(Player player, Solution suggestion) {
-		Card person = suggestion.person;
-		Card room = suggestion.room;
-		Card weapon = suggestion.weapon;
 		ArrayList<Player> playerOrder = getPlayerOrder(player);
 		for (Player p : playerOrder) {
 			if (p.equals(player)) {
@@ -433,6 +433,7 @@ public class Board {
 		return null;
 	}
 	
+	// helper method to return a list of the current order of players
 	private ArrayList<Player> getPlayerOrder(Player player) {
 		ArrayList<Player> order = new ArrayList<>();
 		int j = players.indexOf(player);
