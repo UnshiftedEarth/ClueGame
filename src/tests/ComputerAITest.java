@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import clueGame.Board;
 import clueGame.BoardCell;
+import clueGame.Card;
 import clueGame.ComputerPlayer;
+import clueGame.Solution;
 
 class ComputerAITest {
 
@@ -19,6 +21,8 @@ class ComputerAITest {
 		board = Board.getInstance();
 		// set the file names to use my config files
 		board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");	
+		// clear the deck
+		board.clearDeck();
 		// Initialize will load config files 
 		board.initialize();
 	}
@@ -47,7 +51,7 @@ class ComputerAITest {
 		board.calcTargets(board.getCell(6, 2), 2);
 		int sum1 = 0;
 		int sum2 = 0; 
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < 14; i++) {
 			selected = computer.selectTarget(board.getTargets());
 			if (selected.equals(board.getCell(4, 6))) {
 				sum1++;
@@ -100,20 +104,65 @@ class ComputerAITest {
 	@Test
 	public void testComputerCreateSuggestion() {
 		ComputerPlayer computer = new ComputerPlayer();
+		// ensure the computer suggests the one weapon card it hasn't seen 
+		computer.updateSeen(board.getCard("Gun"));
+		computer.updateSeen(board.getCard("Bat"));
+		computer.updateSeen(board.getCard("Knife"));
+		computer.updateSeen(board.getCard("Hands"));
+		computer.updateSeen(board.getCard("Spike"));
+		Solution suggestion = computer.createSuggestion();
+		Card weapon = suggestion.weapon;
+		assertTrue(weapon.equals(board.getCard("Bow")));////
+		computer.clearSeen();
 		
-		/* weapons only
-		 * To test fill computers seenCards with 5 cards and ensure 
-		 * the last card is suggestion so it learns something
-		 */
+		// ensure the computer suggests the one player card it hasn't seen
+		computer.updateSeen(board.getCard("Blue"));
+		computer.updateSeen(board.getCard("Green"));
+		computer.updateSeen(board.getCard("Pink"));
+		computer.updateSeen(board.getCard("Yellow"));
+		computer.updateSeen(board.getCard("Red"));
+		suggestion = computer.createSuggestion();
+		Card person = suggestion.person;
+		assertTrue(person.equals(board.getCard("Orange")));
+		computer.clearSeen();
 		
-		/*
-		 * repeat test for maybe players?
-		 */
 		
-		/* weapons only
-		 * test also 2 cards in seenCards list and make sure that every
-		 * other type of card is returned at least one, random test see above example
-		 */
+		// ensure every other card not seen is returned at least once 
+		computer.updateSeen(board.getCard("Gun"));
+		computer.updateSeen(board.getCard("Knife"));
+		int sum1 = 0;
+		int sum2 = 0; 
+		int sum3 = 0;
+		int sum4 = 0; 
+		for (int i = 0; i < 30; i++) {
+			suggestion = computer.createSuggestion();
+			weapon = suggestion.weapon;
+			if (weapon.equals(board.getCard("Hands"))) {
+				sum1++;
+			}
+			else if (weapon.equals(board.getCard("Spike"))) {
+				sum2++;
+			}
+			else if (weapon.equals(board.getCard("Bat"))) {
+				sum3++;
+			}
+			else if (weapon.equals(board.getCard("Bow"))) {
+				sum4++;
+			}
+		}
+		assertTrue(sum1 > 0);
+		assertTrue(sum2 > 0);
+		assertTrue(sum3 > 0);
+		assertTrue(sum4 > 0);
+		computer.clearSeen();
+		
+		//ensure that the suggestion contains the room the player is in
+		computer.setLocation(1, 21);
+		suggestion = computer.createSuggestion();
+		assertEquals(board.getCard("Laboratory"), suggestion.room);
+		computer.setLocation(6, 15);
+		suggestion = computer.createSuggestion();
+		assertEquals(board.getCard("Storage"), suggestion.room);
 	}
 
 }

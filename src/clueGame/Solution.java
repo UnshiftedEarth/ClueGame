@@ -8,7 +8,9 @@ public class Solution {
 	
 	
 	public Solution() {
-		
+		person = new Card();
+		room = new Card();
+		weapon = new Card();
 	}
 	
 	public Solution(Card person, Card room, Card weapon) {

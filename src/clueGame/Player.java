@@ -15,6 +15,7 @@ public abstract class Player {
 	private int column;
 	private Set<Card> hand;
 	protected Set<Card> seenCards;
+	protected Board board = Board.getInstance();
 	
 	
 	public Player() {
@@ -32,6 +33,14 @@ public abstract class Player {
 
 	public void updateHand(Card card) {
 		hand.add(card);
+	}
+	
+	// this method returns the room card the player is currently in 
+	public Card getRoomCard() {
+		BoardCell cell = board.getCell(row, column);
+		Room room = board.getRoom(cell);
+		String roomName = room.getName();
+		return board.getCard(roomName);
 	}
 	
 	/*
@@ -87,6 +96,11 @@ public abstract class Player {
 		return hand;
 	}
 
+	public void setLocation(int row, int col) {
+		this.row = row;
+		this.column = col;
+	}
+	
 	public void setColor(String c) {
 		try {
 		    Field field = Class.forName("java.awt.Color").getField(c);

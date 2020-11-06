@@ -16,21 +16,46 @@ public class ComputerPlayer extends Player {
 		super(name, color);
 	}
 	
+	/*
+	 * This method returns a suggestion from the computer player
+	 */
 	public Solution createSuggestion() {
-		//TODO write
-		return new Solution();
+		Card room = getRoomCard();
+		Card person;
+		Card weapon;
+		ArrayList<Card> players = new ArrayList<>();
+		ArrayList<Card> weapons = new ArrayList<>();
+		// find all unseen players and weapons
+		for (Card card : board.getDeck()) {
+			if (card.getType() == CardType.ROOM) {
+				continue;
+			}
+			else if (!seenCards.contains(card)) {
+				if (card.getType() == CardType.PLAYER) {
+					players.add(card);
+				}
+				else {
+					weapons.add(card);
+				}
+			}
+		}
+		// get a random unseen card from players and weapons
+		int rand = random.nextInt(players.size());
+		person = players.get(rand);
+		rand = random.nextInt(weapons.size());
+		weapon = weapons.get(rand);
+		return new Solution(person, room, weapon);
 	}
 	
 	/*
 	 * Method that selects a target to move to from a list of targets 
 	 */
 	public BoardCell selectTarget(Set<BoardCell> targets) {
-		Board board = Board.getInstance();
 		ArrayList<BoardCell> rooms = new ArrayList<BoardCell>();
 		// look for rooms not in seen list
 		for (BoardCell cell : targets) {
 			if (cell.isRoomCenter()) {
-				String roomName = board.getRoom(cell).getName();
+				String roomName = board.getRoom(cell).getName(); 
 				if (!seenCards.contains(board.getCard(roomName))) {
 					rooms.add(cell);
 				}
