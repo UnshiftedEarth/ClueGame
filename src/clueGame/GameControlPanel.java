@@ -19,6 +19,7 @@ public class GameControlPanel extends JFrame {
 	private JTextField turnDescription;
 	
 	public GameControlPanel() {
+		// setup up initial panels
 		JPanel gameControlPanel = new JPanel();
 		JPanel firstRow = new JPanel();
 		firstRow.setLayout(new GridLayout());
@@ -30,9 +31,9 @@ public class GameControlPanel extends JFrame {
 		gameControlPanel.add(secondRow);
 		
 		// add items to first row
-		JPanel whoseTurn = createWhoseTurn();
+		JPanel whoseTurn = createWhoseTurnPanel();
 		firstRow.add(whoseTurn);
-		JPanel roll = createRoll();
+		JPanel roll = createRollPanel();
 		firstRow.add(roll);
 		JButton makeAccusation = new JButton("Make Accusation");
 		firstRow.add(makeAccusation);
@@ -42,12 +43,13 @@ public class GameControlPanel extends JFrame {
 		// add items to second row
 		JPanel resultPanel = createGuessPanel();
 		JPanel guessPanel = createResultPanel();
-		secondRow.add(guessPanel);
 		secondRow.add(resultPanel);
+		secondRow.add(guessPanel);
 		
 		add(gameControlPanel, BorderLayout.CENTER);
 	}
 
+	// creates the panel that displays the suggestion result
 	private JPanel createResultPanel() {
 		JPanel resultPanel = new JPanel();
 		resultPanel.setLayout(new GridLayout());
@@ -58,6 +60,7 @@ public class GameControlPanel extends JFrame {
 		return resultPanel;
 	}
 
+	// creates the panel that displays the suggestion
 	private JPanel createGuessPanel() {
 		JPanel guessPanel = new JPanel();
 		guessPanel.setLayout(new GridLayout());
@@ -68,7 +71,8 @@ public class GameControlPanel extends JFrame {
 		return guessPanel;
 	}
 	
-	private JPanel createRoll() {
+	// creates the panel that displays the die roll
+	private JPanel createRollPanel() {
 		JPanel rollPanel = new JPanel();
 		JLabel label = new JLabel("Roll:");
 		roll = new JTextField(5);
@@ -77,8 +81,9 @@ public class GameControlPanel extends JFrame {
 		rollPanel.add(roll);
 		return rollPanel;
 	}
-
-	private JPanel createWhoseTurn() {
+	
+	// creates the panel that displays whose turn it is
+	private JPanel createWhoseTurnPanel() {
 		JPanel whoseTurnPanel = new JPanel();
 		JLabel label = new JLabel("Whose Turn?");
 		turnDescription = new JTextField(16);
@@ -112,6 +117,7 @@ public class GameControlPanel extends JFrame {
 		control.setVisible(true);
 		control.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		// test the setters
 		control.setGuess("Blue");
 		control.setTurnDescription("I don't have a guess. Sorry :(");
 		control.setRoll("3");
