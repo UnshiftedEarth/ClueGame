@@ -9,7 +9,7 @@ Room, Electrical, E
 Room, Storage, G
 Room, Office, F
 // Players
-Player, Human, Blue, blue
+Player, Human, Blue, cyan
 Player, Computer, Green, green
 Player, Computer, Pink, pink
 Player, Computer, Yellow, yellow

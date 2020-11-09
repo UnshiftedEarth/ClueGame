@@ -84,11 +84,11 @@ public abstract class Player {
 	
 
 	// setters and getters
-	public Object getName() {
+	public String getName() {
 		return name;
 	}
 
-	public Object getColor() {
+	public Color getColor() {
 		return color;
 	}
 	
@@ -104,7 +104,22 @@ public abstract class Player {
 	public void setColor(String c) {
 		try {
 		    Field field = Class.forName("java.awt.Color").getField(c);
-		    color = (Color) field.get(null);
+		    Color temp = (Color) field.get(null);
+		    int red = temp.getRed();
+		    int green = temp.getGreen();
+		    int blue = temp.getBlue();
+		    int adj = 100;
+		    if (red + adj <= 255) {
+		    	red += adj;
+		    }
+		    if (green + adj <= 255) {
+		    	green += adj;
+		    }
+		    if (blue + adj <= 255) {
+		    	blue += adj;
+		    }
+		    Color lighter = new Color(red, green, blue);
+		    color = lighter;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
