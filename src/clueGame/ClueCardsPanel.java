@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-public class ClueCardsPanel extends JFrame{
+public class ClueCardsPanel extends JPanel{
 	
 	private JPanel peopleInHand = new JPanel(); 
 	private JPanel peopleSeen = new JPanel();
@@ -43,7 +43,8 @@ public class ClueCardsPanel extends JFrame{
 		knownCards.add(rooms);
 		knownCards.add(weapons);
 		// add panel to jframe
-		add(knownCards, BorderLayout.CENTER);
+		this.setLayout(new GridLayout());
+		add(knownCards);
 	}
 
 	/*
@@ -71,7 +72,7 @@ public class ClueCardsPanel extends JFrame{
 		panel.add(seen);
 		seenCards.setLayout(new GridLayout(0,1));
 		panel.add(seenCards);
-		JTextField noneCard2 = new JTextField("None", 5);
+		JTextField noneCard2 = new JTextField("None");
 		noneCard2.setEditable(false);
 		seenCards.add(noneCard2);
 		
@@ -126,10 +127,12 @@ public class ClueCardsPanel extends JFrame{
 	
 
 	public static void main(String[] args) {
+		JFrame display = new JFrame();
 		ClueCardsPanel control = new ClueCardsPanel();
-		control.setSize(250, 900);
-		control.setTitle("Control Panel For Clue");
-		control.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		display.add(control, BorderLayout.CENTER);
+		display.setSize(250, 900);
+		display.setTitle("Control Panel For Clue");
+		display.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		Board board = Board.getInstance();
 		board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");	
@@ -158,7 +161,7 @@ public class ClueCardsPanel extends JFrame{
 		control.addToSeen("Bat", CardType.WEAPON, players.get(2));
 		control.addToSeen("Bow", CardType.WEAPON, players.get(5));
 		
-		control.setVisible(true);
+		display.setVisible(true);
 	}
 
 	

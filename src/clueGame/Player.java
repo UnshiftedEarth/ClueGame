@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,6 +71,10 @@ public abstract class Player {
 		return null;
 	}
 	
+	public void draw(Graphics g) {
+		// TODO create
+	}
+	
 	public void updateSeen(Card seenCard) {
 		seenCards.add(seenCard);
 	}
@@ -124,4 +129,5 @@ public abstract class Player {
 			e.printStackTrace();
 		}
 	}
+
 }

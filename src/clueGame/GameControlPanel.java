@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-public class GameControlPanel extends JFrame {
+public class GameControlPanel extends JPanel {
 	
 	private JTextField result;
 	private JTextField guess;
@@ -46,7 +46,8 @@ public class GameControlPanel extends JFrame {
 		secondRow.add(resultPanel);
 		secondRow.add(guessPanel);
 		
-		add(gameControlPanel, BorderLayout.CENTER);
+		setLayout(new GridLayout());
+		add(gameControlPanel);
 	}
 
 	// creates the panel that displays the suggestion result
@@ -111,11 +112,13 @@ public class GameControlPanel extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		JFrame display = new JFrame();
 		GameControlPanel control = new GameControlPanel();
-		control.setSize(750, 180);
-		control.setTitle("Control Panel For Clue");
-		control.setVisible(true);
-		control.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		display.add(control, BorderLayout.CENTER);
+		display.setSize(750, 180);
+		display.setTitle("Control Panel For Clue");
+		display.setVisible(true);
+		display.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// test the setters
 		control.setGuess("Blue");

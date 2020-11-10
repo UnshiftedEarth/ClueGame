@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +26,10 @@ public class BoardCell implements Comparable<BoardCell> {
 		adjList = new HashSet<>();
 	}
 	
+	// Method for each boardcell to draw itself
+	public void draw(Graphics g) {
+		// TODO make
+	}
 	
 	
 	// Setters and Getters

@@ -1,11 +1,15 @@
 package clueGame;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 
+import javax.swing.JPanel;
 
-public class Board {
+
+public class Board extends JPanel {
 
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
@@ -445,6 +449,27 @@ public class Board {
 			j++;
 		}
 		return order;
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		int width = this.getWidth();
+		int height = this.getHeight();
+		super.paintComponent(g);
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, width, height);
+		// draw the cells
+		for (BoardCell[] cellRow : grid) {
+			for (BoardCell cell : cellRow) {
+				cell.draw(g); // add parameters later
+			}
+		}
+		// draw room names 
+		
+		// draw players
+		for (Player player : players) {
+			player.draw(g);
+		}
 	}
 
 	//setters and getters
