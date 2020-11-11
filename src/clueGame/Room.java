@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,8 +20,36 @@ public class Room {
 		doorList = new HashSet<>();
 	}
 	
-	public void drawLabel(Graphics g, double width, double height, int rows, int columns) {
+	public void drawLabel(Graphics g, double width, double height, int numRows, int numCols) {
+		if (labelCell == null) {
+			return;
+		}
+		int cellWidth = (int) Math.floor(width/numCols);
+		int cellHeight = (int) Math.floor(height/numRows);
+		int proportion = 0;
 		
+		if (cellWidth > cellHeight) {
+			cellWidth = cellHeight;
+		}
+		else {
+			cellHeight = cellWidth;
+		}
+		if (height < width) {
+			proportion = (int) height;
+		}
+		else {
+			proportion = (int) width;
+		}
+		
+		int fontSize = (int) Math.ceil(proportion/40);
+		int offSetX = ((int) width-(cellWidth*numCols))/2;
+		int offSetY = ((int) height-(cellHeight*numRows))/2;
+		int h = cellHeight;
+		int x = labelCell.getCol() * cellWidth + offSetX;
+		int y = labelCell.getRow() * cellHeight + offSetY;
+		
+		g.setFont(new Font("Comic Sans MS", Font.BOLD, fontSize));
+		g.drawString(name, x+5, y+h);
 	}
 	
 	//setters and getters

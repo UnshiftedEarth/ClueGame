@@ -9,12 +9,12 @@ Room, Dining Room, D
 Room, Lounge, O
 Room, Hall, H
 // Players
-Player, Human, Miss Scarlet, red
-Player, Computer, Mrs. White, white
-Player, Computer, Mrs. Peacock, blue
-Player, Computer, Professor Plum, magenta
-Player, Computer, Mr. Green, green
-Player, Computer, Colonel Mustard, yellow
+Player, Human, Miss Scarlet, red, 0, 16
+Player, Computer, Mrs. White, white, 24, 14
+Player, Computer, Mrs. Peacock, blue, 18, 0
+Player, Computer, Professor Plum, magenta, 5, 0
+Player, Computer, Mr. Green, green, 24, 9
+Player, Computer, Colonel Mustard, yellow, 7, 23
 // Weapons
 Weapon, Knife
 Weapon, Revolver

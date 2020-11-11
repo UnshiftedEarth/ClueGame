@@ -57,7 +57,7 @@ public class BoardCell implements Comparable<BoardCell> {
 			g.fillRect(x + spacing/2, y + spacing/2, w, h);
 		}
 		else {
-			g.setColor(Color.YELLOW);
+			g.setColor(new Color(255, 230, 0)); // yellowish color
 			x += spacing;
 			y += spacing;
 			w -= spacing;

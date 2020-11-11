@@ -12,8 +12,9 @@ public class ComputerPlayer extends Player {
 		super();
 	}
 	
-	public ComputerPlayer(String name, String color) {
+	public ComputerPlayer(String name, String color, int row, int col) {
 		super(name, color);
+		super.setLocation(row, col);
 	}
 	
 	/*

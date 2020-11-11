@@ -229,11 +229,13 @@ public class Board extends JPanel {
 				String playerType = lineList[1].trim();
 				String color = lineList[3].trim();
 				String name = lineList[2].trim();
+				int rowLocation = Integer.parseInt(lineList[4].trim());
+				int colLocation = Integer.parseInt(lineList[5].trim());
 				if (playerType.equals("Human")) {
-					players.add(new HumanPlayer(name, color));
+					players.add(new HumanPlayer(name, color, rowLocation, colLocation));
 				}
 				else if (playerType.equals("Computer")) {
-					players.add(new ComputerPlayer(name, color));
+					players.add(new ComputerPlayer(name, color, rowLocation, colLocation));
 				}
 				else {
 					scanner.close();
@@ -466,6 +468,7 @@ public class Board extends JPanel {
 				cell.draw(g, roomMap, width, height, NUM_ROWS, NUM_COLUMNS);
 			}
 		}
+		// draw the doorways
 		for (BoardCell[] cellRow : grid) {
 			for (BoardCell cell : cellRow) {
 				cell.drawDoor(g, width, height, NUM_ROWS, NUM_COLUMNS);
@@ -477,7 +480,7 @@ public class Board extends JPanel {
 		}
 		// draw players
 		for (Player player : players) {
-			player.draw(g);
+			player.draw(g, width, height, NUM_ROWS, NUM_COLUMNS);
 		}
 	}
 

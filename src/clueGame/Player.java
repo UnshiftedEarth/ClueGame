@@ -31,6 +31,13 @@ public abstract class Player {
 		hand = new HashSet<>();
 	}
 	
+	public Player(String name, String color, int r, int c) {
+		this.name = name;
+		setColor(color);
+		hand = new HashSet<>();
+		setLocation(r, c);
+	}
+	
 
 	public void updateHand(Card card) {
 		hand.add(card);
@@ -71,8 +78,39 @@ public abstract class Player {
 		return null;
 	}
 	
-	public void draw(Graphics g) {
-		// TODO create
+	public void draw(Graphics g, double width, double height, int numRows, int numCol) {
+		int proportion = 0;
+		int cellWidth = (int) Math.floor(width/numCol);
+		int cellHeight = (int) Math.floor(height/numRows);
+		if (cellWidth > cellHeight) {
+			cellWidth = cellHeight;
+		}
+		else {
+			cellHeight = cellWidth;
+		}
+		if (height < width) {
+			proportion = (int) height;
+		}
+		else {
+			proportion = (int) width;
+		}
+		int offSetX = ((int) width-(cellWidth*numCol))/2;
+		int offSetY = ((int) height-(cellHeight*numRows))/2;
+		int spacing = 2;
+		int doorHeight = (int) Math.floor(proportion/117);
+		int w = cellWidth;
+		int h = cellHeight;
+		int x = column * cellWidth + offSetX;
+		int y = row * cellHeight + offSetY;
+		x += spacing;
+		y += spacing;
+		w -= spacing;
+		h -= spacing;
+		
+		g.setColor(color);
+		g.fillOval(x, y, w, h);
+		g.setColor(Color.BLACK);
+		g.drawOval(x, y, w, h);
 	}
 	
 	public void updateSeen(Card seenCard) {
