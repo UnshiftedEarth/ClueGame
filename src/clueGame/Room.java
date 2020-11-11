@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +19,11 @@ public class Room {
 		doorList = new HashSet<>();
 	}
 	
+	public void drawLabel(Graphics g, double width, double height, int rows, int columns) {
+		
+	}
+	
+	//setters and getters
 	public String getName() {
 		return name;
 	}

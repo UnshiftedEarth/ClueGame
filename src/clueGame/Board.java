@@ -453,19 +453,28 @@ public class Board extends JPanel {
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		int width = this.getWidth();
-		int height = this.getHeight();
+		double width = this.getWidth();
+		double height = this.getHeight();
+		int start = 0;
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, width, height);
+		g.fillRect(0, 0, (int) width, (int) height);
+				
 		// draw the cells
 		for (BoardCell[] cellRow : grid) {
 			for (BoardCell cell : cellRow) {
-				cell.draw(g); // add parameters later
+				cell.draw(g, roomMap, width, height, NUM_ROWS, NUM_COLUMNS);
+			}
+		}
+		for (BoardCell[] cellRow : grid) {
+			for (BoardCell cell : cellRow) {
+				cell.drawDoor(g, width, height, NUM_ROWS, NUM_COLUMNS);
 			}
 		}
 		// draw room names 
-		
+		for (Room room : roomMap.values()) {
+			room.drawLabel(g, width, height, NUM_ROWS, NUM_COLUMNS);
+		}
 		// draw players
 		for (Player player : players) {
 			player.draw(g);
