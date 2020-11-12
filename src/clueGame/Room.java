@@ -20,16 +20,18 @@ public class Room {
 		doorList = new HashSet<>();
 	}
 	
+	// method that draws the room names
 	public void drawLabel(Graphics g, Location loc) {
 		if (labelCell == null) {
 			return;
 		}
-		
+		// gather data from location object
 		int fontSize = loc.getFontSize();
 		int h = loc.getCellHeight();
 		int x = loc.calcX(labelCell);
 		int y = loc.calcY(labelCell);
 		
+		// paint the room name
 		g.setFont(new Font("Comic Sans MS", Font.BOLD, fontSize));
 		g.drawString(name, x+5, y+h);
 	}

@@ -78,7 +78,9 @@ public abstract class Player {
 		return null;
 	}
 	
+	// draw the player on the board
 	public void draw(Graphics g, Location loc) {
+		// gather data from location object
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
 		int x = loc.calcX(column);
@@ -88,6 +90,7 @@ public abstract class Player {
 		w -= loc.SPACING;
 		h -= loc.SPACING;
 		
+		// paint the player
 		g.setColor(color);
 		g.fillOval(x, y, w, h);
 		g.setColor(Color.BLACK);

@@ -453,14 +453,20 @@ public class Board extends JPanel {
 		return order;
 	}
 	
+	/*
+	 * this method paints the Clue game board
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
+		// gather initial data on board panel
 		double width = this.getWidth();
 		double height = this.getHeight();
 		int start = 0;
+		// paint the board initially black
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, (int) width, (int) height);
+		// store all location data in location object
 		Location location = new Location(width, height, NUM_ROWS, NUM_COLUMNS);
 		
 		// draw the cells

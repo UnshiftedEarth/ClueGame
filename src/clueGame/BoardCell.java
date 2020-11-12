@@ -35,15 +35,18 @@ public class BoardCell implements Comparable<BoardCell> {
 			return;
 		}
 		
+		// gather data from location object
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
 		int x = loc.calcX(this);
 		int y = loc.calcY(this); 
 		
+		// paint cell gray if cell is room
 		if (isRoom) {
 			g.setColor(Color.LIGHT_GRAY);
 			g.fillRect(x + loc.SPACING/2, y + loc.SPACING/2, w, h);
 		}
+		// paint cell yellow for standard walkway
 		else {
 			g.setColor(new Color(255, 230, 0)); // yellowish color
 			x += loc.SPACING;
@@ -54,33 +57,37 @@ public class BoardCell implements Comparable<BoardCell> {
 		}
 	}
 	
+	// method for drawing the room doors
 	public void drawDoor(Graphics g, Location loc) {
 		if (doorDirection == DoorDirection.NONE) {
 			return;
 		}
 		
+		// gather data from location object
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
 		int x = loc.calcX(this);
 		int y = loc.calcY(this);
+		int door = loc.getDoorHeight();
 		x += loc.SPACING;
 		y += loc.SPACING;
 		w -= loc.SPACING;
 		h -= loc.SPACING;
 		
+		// determine which direction and paint
 		g.setColor(Color.BLUE);
 		switch (doorDirection) {
 		case UP: 
-			g.fillRect(x-loc.SPACING/2, y-loc.getDoorHeight(), w+loc.SPACING, loc.getDoorHeight());
+			g.fillRect(x-loc.SPACING/2, y-door, w+loc.SPACING, door);
 			break;
 		case DOWN:
-			g.fillRect(x-loc.SPACING/2, y+h, w+loc.SPACING, loc.getDoorHeight());
+			g.fillRect(x-loc.SPACING/2, y+h, w+loc.SPACING, door);
 			break;
 		case LEFT:
-			g.fillRect(x-loc.getDoorHeight(), y-loc.SPACING/2, loc.getDoorHeight(), h+loc.SPACING);
+			g.fillRect(x-door, y-loc.SPACING/2, door, h+loc.SPACING);
 			break;
 		case RIGHT:
-			g.fillRect(x+w, y-loc.SPACING/2, loc.getDoorHeight(), h+loc.SPACING);
+			g.fillRect(x+w, y-loc.SPACING/2, door, h+loc.SPACING);
 		}
 	}
 	
