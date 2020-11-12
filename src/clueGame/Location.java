@@ -6,6 +6,7 @@ public class Location {
 	private int cellHeight;
 	private int offSetX;
 	private int offSetY;
+	private int doorHeight;
 	public static final int spacing = 2;
 	
 	public Location(double width, double height, int numRows, int numCols) {
@@ -21,14 +22,22 @@ public class Location {
 		offSetX = ((int) width-(cellWidth*numCols))/2;
 		offSetY = ((int) height-(cellHeight*numRows))/2;
 		
+		int proportion = 0;
+		if (height < width) {
+			proportion = (int) height;
+		}
+		else {
+			proportion = (int) width;
+		}
+		doorHeight = (int) Math.floor(proportion/117);
 	}
 	
-	public int calcX(int col) {
-		return col * cellWidth + offSetX;
+	public int calcX(BoardCell cell) {
+		return cell.getCol() * cellWidth + offSetX;
 	}
 	
-	public int calcY(int row) {
-		return row * cellHeight + offSetY;
+	public int calcY(BoardCell cell) {
+		return cell.getRow() * cellHeight + offSetY;
 	}
 
 	
@@ -48,5 +57,10 @@ public class Location {
 	public int getOffSetY() {
 		return offSetY;
 	}
+
+	public int getDoorHeight() {
+		return doorHeight;
+	}
+	
 	
 }

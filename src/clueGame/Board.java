@@ -461,18 +461,18 @@ public class Board extends JPanel {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, (int) width, (int) height);
-		
+		Location location = new Location(width, height, NUM_ROWS, NUM_COLUMNS);
 		
 		// draw the cells
 		for (BoardCell[] cellRow : grid) {
 			for (BoardCell cell : cellRow) {
-				cell.draw(g, roomMap, width, height, NUM_ROWS, NUM_COLUMNS);
+				cell.draw(g, roomMap, location);
 			}
 		}
 		// draw the doorways
 		for (BoardCell[] cellRow : grid) {
 			for (BoardCell cell : cellRow) {
-				cell.drawDoor(g, width, height, NUM_ROWS, NUM_COLUMNS);
+				cell.drawDoor(g, location);
 			}
 		}
 		// draw room names 
