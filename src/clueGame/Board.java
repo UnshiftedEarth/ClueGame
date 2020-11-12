@@ -461,7 +461,8 @@ public class Board extends JPanel {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, (int) width, (int) height);
-				
+		
+		
 		// draw the cells
 		for (BoardCell[] cellRow : grid) {
 			for (BoardCell cell : cellRow) {
