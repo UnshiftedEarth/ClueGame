@@ -78,35 +78,19 @@ public abstract class Player {
 		return null;
 	}
 	
-	public void draw(Graphics g, double width, double height, int numRows, int numCol) {
-		int proportion = 0;
-		int cellWidth = (int) Math.floor(width/numCol);
-		int cellHeight = (int) Math.floor(height/numRows);
-		if (cellWidth > cellHeight) {
-			cellWidth = cellHeight;
-		}
-		else {
-			cellHeight = cellWidth;
-		}
-		if (height < width) {
-			proportion = (int) height;
-		}
-		else {
-			proportion = (int) width;
-		}
-		int offSetX = ((int) width-(cellWidth*numCol))/2;
-		int offSetY = ((int) height-(cellHeight*numRows))/2;
-		int spacing = 2;
-		int doorHeight = (int) Math.floor(proportion/117);
-		int w = cellWidth;
-		int h = cellHeight;
-		int x = column * cellWidth + offSetX;
-		int y = row * cellHeight + offSetY;
-		x += spacing;
-		y += spacing;
-		w -= spacing;
-		h -= spacing;
+	// draw the player on the board
+	public void draw(Graphics g, Location loc) {
+		// gather data from location object
+		int w = loc.getCellWidth();
+		int h = loc.getCellHeight();
+		int x = loc.calcX(column);
+		int y = loc.calcY(row);
+		x += loc.SPACING;
+		y += loc.SPACING;
+		w -= loc.SPACING;
+		h -= loc.SPACING;
 		
+		// paint the player
 		g.setColor(color);
 		g.fillOval(x, y, w, h);
 		g.setColor(Color.BLACK);
