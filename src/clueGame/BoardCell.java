@@ -38,18 +38,18 @@ public class BoardCell implements Comparable<BoardCell> {
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
 		int x = loc.calcX(this);
-		int y = loc.calcY(this); // change to pass in this object
+		int y = loc.calcY(this); 
 		
 		if (isRoom) {
 			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(x + loc.spacing/2, y + loc.spacing/2, w, h);
+			g.fillRect(x + loc.SPACING/2, y + loc.SPACING/2, w, h);
 		}
 		else {
 			g.setColor(new Color(255, 230, 0)); // yellowish color
-			x += loc.spacing;
-			y += loc.spacing;
-			w -= loc.spacing;
-			h -= loc.spacing;
+			x += loc.SPACING;
+			y += loc.SPACING;
+			w -= loc.SPACING;
+			h -= loc.SPACING;
 			g.fillRect(x, y, w, h);
 		}
 	}
@@ -63,24 +63,24 @@ public class BoardCell implements Comparable<BoardCell> {
 		int h = loc.getCellHeight();
 		int x = loc.calcX(this);
 		int y = loc.calcY(this);
-		x += loc.spacing;
-		y += loc.spacing;
-		w -= loc.spacing;
-		h -= loc.spacing;
+		x += loc.SPACING;
+		y += loc.SPACING;
+		w -= loc.SPACING;
+		h -= loc.SPACING;
 		
 		g.setColor(Color.BLUE);
 		switch (doorDirection) {
 		case UP: 
-			g.fillRect(x-loc.spacing/2, y-loc.getDoorHeight(), w+loc.spacing, loc.getDoorHeight());
+			g.fillRect(x-loc.SPACING/2, y-loc.getDoorHeight(), w+loc.SPACING, loc.getDoorHeight());
 			break;
 		case DOWN:
-			g.fillRect(x-loc.spacing/2, y+h, w+loc.spacing, loc.getDoorHeight());
+			g.fillRect(x-loc.SPACING/2, y+h, w+loc.SPACING, loc.getDoorHeight());
 			break;
 		case LEFT:
-			g.fillRect(x-loc.getDoorHeight(), y-loc.spacing/2, loc.getDoorHeight(), h+loc.spacing);
+			g.fillRect(x-loc.getDoorHeight(), y-loc.SPACING/2, loc.getDoorHeight(), h+loc.SPACING);
 			break;
 		case RIGHT:
-			g.fillRect(x+w, y-loc.spacing/2, loc.getDoorHeight(), h+loc.spacing);
+			g.fillRect(x+w, y-loc.SPACING/2, loc.getDoorHeight(), h+loc.SPACING);
 		}
 	}
 	

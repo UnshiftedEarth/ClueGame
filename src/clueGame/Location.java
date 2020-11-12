@@ -7,7 +7,8 @@ public class Location {
 	private int offSetX;
 	private int offSetY;
 	private int doorHeight;
-	public static final int spacing = 2;
+	private int fontSize;
+	public static final int SPACING = 2;
 	
 	public Location(double width, double height, int numRows, int numCols) {
 		cellWidth = (int) Math.floor(width/numCols);
@@ -30,6 +31,7 @@ public class Location {
 			proportion = (int) width;
 		}
 		doorHeight = (int) Math.floor(proportion/117);
+		fontSize = (int) Math.ceil(proportion/40);
 	}
 	
 	public int calcX(BoardCell cell) {
@@ -38,6 +40,14 @@ public class Location {
 	
 	public int calcY(BoardCell cell) {
 		return cell.getRow() * cellHeight + offSetY;
+	}
+	
+	public int calcX(int col) {
+		return col * cellWidth + offSetX;
+	}
+	
+	public int calcY(int row) {
+		return row * cellHeight + offSetY;
 	}
 
 	
@@ -60,6 +70,10 @@ public class Location {
 
 	public int getDoorHeight() {
 		return doorHeight;
+	}
+
+	public int getFontSize() {
+		return fontSize;
 	}
 	
 	

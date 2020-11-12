@@ -477,11 +477,11 @@ public class Board extends JPanel {
 		}
 		// draw room names 
 		for (Room room : roomMap.values()) {
-			room.drawLabel(g, width, height, NUM_ROWS, NUM_COLUMNS);
+			room.drawLabel(g, location);
 		}
 		// draw players
 		for (Player player : players) {
-			player.draw(g, width, height, NUM_ROWS, NUM_COLUMNS);
+			player.draw(g, location);
 		}
 	}
 
