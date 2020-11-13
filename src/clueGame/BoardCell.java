@@ -2,6 +2,8 @@ package clueGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +23,8 @@ public class BoardCell implements Comparable<BoardCell> {
 	private Set<BoardCell> adjList;
 	private int x;
 	private int y;
+	private int cellWidth;
+	private int cellHeight;
 	
 	
 	public BoardCell(int row, int col) {
@@ -38,6 +42,8 @@ public class BoardCell implements Comparable<BoardCell> {
 		}
 		
 		// gather data from location object
+		cellWidth = loc.getCellWidth();
+		cellHeight = loc.getCellHeight();
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
 		x = loc.calcX(this);
@@ -98,6 +104,14 @@ public class BoardCell implements Comparable<BoardCell> {
 		case RIGHT:
 			g.fillRect(x+w, y-loc.SPACING/2, door, h+loc.SPACING);
 		}
+	}
+	
+	public boolean containsClick(int mouseX, int mouseY) {
+		Rectangle rect = new Rectangle(x, y, cellWidth, cellHeight);
+		if (rect.contains(new Point(mouseX, mouseY))) {
+			return true;
+		}
+		return false;
 	}
 	
 	

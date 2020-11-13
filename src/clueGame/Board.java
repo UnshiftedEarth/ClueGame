@@ -519,8 +519,26 @@ public class Board extends JPanel {
 			if (!(currentPlayer instanceof HumanPlayer)) {
 				return;
 			}
-			
+			BoardCell clickedCell = getMouseCell();
+			if (!isTarget(clickedCell)) {
+				JOptionPane.showMessageDialog(instance, "That is not a target", "Error", 1);
+				return;
+			}
+			System.out.println("target");
 			//TODO finish
+		}
+		
+		private BoardCell getMouseCell() {
+			int x = getMousePosition().x;
+			int y = getMousePosition().y;
+			for (BoardCell[] cellRow : grid) {
+				for (BoardCell cell : cellRow) {
+					if (cell.containsClick(x, y)) {
+						return cell;
+					}
+				}
+			}
+			return null;
 		}
 
 		@Override
@@ -543,6 +561,7 @@ public class Board extends JPanel {
 		// TODO finish
 	}
 	
+	// Method to start the game
 	public void playGame() {
 		currentPlayer = players.get(0);
 		ClueGame.rollDice();
