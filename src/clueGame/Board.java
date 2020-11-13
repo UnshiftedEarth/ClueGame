@@ -2,10 +2,13 @@ package clueGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -21,6 +24,7 @@ public class Board extends JPanel {
 	private static Solution theAnswer;
 	private Set<Card> deck;
 	private ArrayList<Player> players;
+	private Player currentPlayer;
 
 	private Map<Character, Room> roomMap;
 	private static Board instance = new Board();
@@ -39,6 +43,7 @@ public class Board extends JPanel {
 		deck = new HashSet<>();
 		players = new ArrayList<>();
 		theAnswer = new Solution();
+		this.addMouseListener(new BoardClicked());
 	}
 
 	/*
@@ -232,7 +237,8 @@ public class Board extends JPanel {
 				int rowLocation = Integer.parseInt(lineList[4].trim());
 				int colLocation = Integer.parseInt(lineList[5].trim());
 				if (playerType.equals("Human")) {
-					players.add(new HumanPlayer(name, color, rowLocation, colLocation));
+					HumanPlayer human = new HumanPlayer(name, color, rowLocation, colLocation);
+					players.add(human);
 				}
 				else if (playerType.equals("Computer")) {
 					players.add(new ComputerPlayer(name, color, rowLocation, colLocation));
@@ -461,7 +467,6 @@ public class Board extends JPanel {
 		// gather initial data on board panel
 		double width = this.getWidth();
 		double height = this.getHeight();
-		int start = 0;
 		// paint the board initially black
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
@@ -472,7 +477,12 @@ public class Board extends JPanel {
 		// draw the cells
 		for (BoardCell[] cellRow : grid) {
 			for (BoardCell cell : cellRow) {
-				cell.draw(g, roomMap, location);
+				if (isTarget(cell)) {
+					cell.draw(g, roomMap, location, true);
+				}
+				else {
+					cell.draw(g, roomMap, location, false);
+				}
 			}
 		}
 		// draw the doorways
@@ -490,7 +500,58 @@ public class Board extends JPanel {
 			player.draw(g, location);
 		}
 	}
+	
+	// simple method to see if a cell is a target or not
+	private boolean isTarget(BoardCell cell) {
+		for (BoardCell c : targets) {
+			if (c.equals(cell)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// mouse listener for clicking on the board
+	private class BoardClicked implements MouseListener {
 
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if (!(currentPlayer instanceof HumanPlayer)) {
+				return;
+			}
+			
+			//TODO finish
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {}
+		@Override
+		public void mouseExited(MouseEvent e) {}
+		@Override
+		public void mousePressed(MouseEvent e) {}
+		@Override
+		public void mouseReleased(MouseEvent e) {}
+	}
+	
+	public void buttonNext() {
+		if (currentPlayer instanceof HumanPlayer && !currentPlayer.isFinished()) {
+			JOptionPane.showMessageDialog(this, "Please Finish Your Turn", "Error", 1);
+			return;
+		}
+		ArrayList<Player> playerOrder = getPlayerOrder(currentPlayer);
+		currentPlayer = playerOrder.get(1); // get next player
+		// TODO finish
+	}
+	
+	public void playGame() {
+		currentPlayer = players.get(0);
+		ClueGame.rollDice();
+		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
+		calcTargets(currentCell, ClueGame.getRoll());
+		repaint();
+	}
+
+	
 	//setters and getters
 	public Set<BoardCell> getTargets() {
 		return targets;
@@ -512,6 +573,15 @@ public class Board extends JPanel {
 	public Player getPlayer(String x) {
 		for (Player player : players) {
 			if (player.getName().equals(x)) {
+				return player;
+			}
+		}
+		return null;
+	}
+	
+	public Player getHuman() {
+		for (Player player : players) {
+			if (player instanceof HumanPlayer) {
 				return player;
 			}
 		}

@@ -19,6 +19,8 @@ public class BoardCell implements Comparable<BoardCell> {
 	private boolean isOccupied;
 	private boolean isRoom;
 	private Set<BoardCell> adjList;
+	private int x;
+	private int y;
 	
 	
 	public BoardCell(int row, int col) {
@@ -29,7 +31,7 @@ public class BoardCell implements Comparable<BoardCell> {
 	}
 	
 	// Method for each boardcell to draw itself
-	public void draw(Graphics g, Map<Character, Room> roomMap, Location loc) {
+	public void draw(Graphics g, Map<Character, Room> roomMap, Location loc, boolean target) {
 		String name = roomMap.get(initial).getName();
 		if (name.equals("Unused")) {
 			return;
@@ -38,8 +40,8 @@ public class BoardCell implements Comparable<BoardCell> {
 		// gather data from location object
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
-		int x = loc.calcX(this);
-		int y = loc.calcY(this); 
+		x = loc.calcX(this);
+		y = loc.calcY(this); 
 		
 		// paint cell gray if cell is room
 		if (isRoom) {
@@ -48,7 +50,14 @@ public class BoardCell implements Comparable<BoardCell> {
 		}
 		// paint cell yellow for standard walkway
 		else {
-			g.setColor(new Color(255, 230, 0)); // yellowish color
+			// check if cell is a target
+			if (target) {
+				g.setColor(new Color(0, 205, 255));
+			}
+			else {
+				g.setColor(new Color(255, 230, 0)); // yellowish color
+			}
+			
 			x += loc.SPACING;
 			y += loc.SPACING;
 			w -= loc.SPACING;
@@ -66,8 +75,8 @@ public class BoardCell implements Comparable<BoardCell> {
 		// gather data from location object
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
-		int x = loc.calcX(this);
-		int y = loc.calcY(this);
+		x = loc.calcX(this);
+		y = loc.calcY(this);
 		int door = loc.getDoorHeight();
 		x += loc.SPACING;
 		y += loc.SPACING;
@@ -167,6 +176,14 @@ public class BoardCell implements Comparable<BoardCell> {
 
 	public int getCol() {
 		return col;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
 	}
 
 	@Override

@@ -2,8 +2,10 @@ package clueGame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class ClueGame extends JFrame {
 	
@@ -13,8 +15,9 @@ public class ClueGame extends JFrame {
 	public String layoutConfigFile = "ClueLayout.csv";
 	private String setupConfigFile = "ClueSetup.txt";
 
-	private GameControlPanel controlPanel;
-	private ClueCardsPanel cardsPanel;
+	private static GameControlPanel controlPanel;
+	private static ClueCardsPanel cardsPanel;
+	private static int roll;
 	private Board instance;
 	
 	public ClueGame() {
@@ -22,7 +25,17 @@ public class ClueGame extends JFrame {
 		cardsPanel = new ClueCardsPanel();
 		cardsPanel.setPreferredSize(new Dimension(160, 0));
 		setup();
-		playGame();
+		instance.playGame();
+	}
+	
+	public static void rollDice() {
+		Random random = new Random();
+		roll = random.nextInt(6) + 1;
+		controlPanel.setRoll("" + roll);
+	}
+	
+	public static int getRoll() {
+		return roll;
 	}
 	
 	private void setup() {
@@ -36,11 +49,12 @@ public class ClueGame extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(HEIGHT, WIDTH);
+		setTitle("Clue Game");
 		setVisible(true);
-	}
-
-	private void playGame() {
-		// TODO start clue game
+		
+		String start = "           You are " + instance.getHuman().getName() +
+				". \n You must solve the mystery \nbefore the computer players";
+		JOptionPane.showMessageDialog(this, start, "Welcome detective", 1);
 	}
 
 	public static void main(String[] args) {

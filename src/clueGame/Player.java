@@ -14,6 +14,7 @@ public abstract class Player {
 	private Color color;
 	private int row;
 	private int column;
+	boolean finished;
 	private Set<Card> hand;
 	protected Set<Card> seenCards;
 	protected Board board = Board.getInstance();
@@ -119,8 +120,24 @@ public abstract class Player {
 		return color;
 	}
 	
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
 	public Set<Card> getHand() {
 		return hand;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
 	}
 
 	public void setLocation(int row, int col) {

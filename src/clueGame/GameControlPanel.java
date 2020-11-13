@@ -2,6 +2,8 @@ package clueGame;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,6 +40,7 @@ public class GameControlPanel extends JPanel {
 		JButton makeAccusation = new JButton("Make Accusation");
 		firstRow.add(makeAccusation);
 		JButton next = new JButton("Next!");
+		next.addActionListener(new ButtonListner());
 		firstRow.add(next);
 		
 		// add items to second row
@@ -92,6 +95,16 @@ public class GameControlPanel extends JPanel {
 		whoseTurnPanel.add(label);
 		whoseTurnPanel.add(turnDescription);
 		return whoseTurnPanel;
+	}
+	
+	private class ButtonListner implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			Board instance = Board.getInstance();
+			instance.buttonNext();
+		}
+		
 	}
 
 	// setters 
