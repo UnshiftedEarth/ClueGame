@@ -22,7 +22,7 @@ public class Card {
 
 
 	// setters and getters 
-	public Object getName() {
+	public String getName() {
 		return cardName;
 	}
 

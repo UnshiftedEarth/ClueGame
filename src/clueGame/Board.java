@@ -613,6 +613,7 @@ public class Board extends JPanel {
 		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
 		calcTargets(currentCell, ClueGame.getRoll());
 		ClueGame.setTurn(currentPlayer);
+		// if current Player is human
 		if (currentPlayer instanceof HumanPlayer) {
 			repaint();
 			currentPlayer.setFinished(false);
@@ -635,6 +636,7 @@ public class Board extends JPanel {
 		currentPlayer = players.get(0);
 		ClueGame.rollDice();
 		ClueGame.setTurn(currentPlayer);
+		ClueGame.setCards(currentPlayer.getHand(), currentPlayer);
 		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
 		calcTargets(currentCell, ClueGame.getRoll());
 		repaint();

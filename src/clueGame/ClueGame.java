@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Random;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -39,6 +40,20 @@ public class ClueGame extends JFrame {
 		Color color = player.getColor();
 		String name = player.getName();
 		controlPanel.setTurnDescription(name, color);
+	}
+	
+	public static void setCards(Set<Card> hand, Player human) {
+		for (Card card : hand) {
+			cardsPanel.addToHand(card.getName(), card.getType(), human);
+		}
+		cardsPanel.setVisible(false);
+		cardsPanel.setVisible(true);
+	}
+	
+	public static void addToSeen(Card card, Player player) {
+		cardsPanel.addToSeen(card.getName(), card.getType(), player);
+		cardsPanel.setVisible(false);
+		cardsPanel.setVisible(true);
 	}
 	
 	public static int getRoll() {

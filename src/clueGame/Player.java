@@ -101,7 +101,7 @@ public abstract class Player {
 			y = loc.calcY(row);
 			x += loc.SPACING;
 			y += loc.SPACING;
-			x += 10 * n;
+			x += loc.getPlayerOffset() * n;
 		}
 		else {
 			x = loc.calcX(column);

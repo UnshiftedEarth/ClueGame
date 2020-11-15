@@ -8,6 +8,7 @@ public class Location {
 	private int offSetY;
 	private int doorHeight;
 	private int fontSize;
+	private int playerOffset;
 	public static final int SPACING = 2;
 	
 	public Location(double width, double height, int numRows, int numCols) {
@@ -36,6 +37,7 @@ public class Location {
 		}
 		doorHeight = (int) Math.floor(proportion/117);
 		fontSize = (int) Math.ceil(proportion/40);
+		playerOffset = (int) Math.ceil(proportion/58);
 	}
 	
 	/*
@@ -83,6 +85,9 @@ public class Location {
 	public int getFontSize() {
 		return fontSize;
 	}
-	
+
+	public int getPlayerOffset() {
+		return playerOffset;
+	}
 	
 }
