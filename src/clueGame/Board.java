@@ -25,6 +25,7 @@ public class Board extends JPanel {
 	private Set<Card> deck;
 	private ArrayList<Player> players;
 	private Player currentPlayer;
+	private Set<Room> targetRooms;
 
 	private Map<Character, Room> roomMap;
 	private static Board instance = new Board();
@@ -44,6 +45,7 @@ public class Board extends JPanel {
 		players = new ArrayList<>();
 		theAnswer = new Solution();
 		this.addMouseListener(new BoardClicked());
+		targetRooms = new HashSet();
 	}
 
 	/*
@@ -474,7 +476,16 @@ public class Board extends JPanel {
 		// store all location data in location object
 		Location location = new Location(width, height, NUM_ROWS, NUM_COLUMNS);
 		
-		// draw the cells
+		// set room as target if center cell is target
+		for (BoardCell[] cellRow : grid) {
+			for (BoardCell cell : cellRow) {
+				if (cell.isRoom() && isTarget(cell)) {
+					targetRooms.add(roomMap.get(cell.getInitial()));
+					roomMap.get(cell.getInitial()).setTarget(true);
+				}
+			}
+		}
+		// draw cells
 		for (BoardCell[] cellRow : grid) {
 			for (BoardCell cell : cellRow) {
 				if (isTarget(cell)) {
@@ -524,16 +535,45 @@ public class Board extends JPanel {
 				JOptionPane.showMessageDialog(instance, "That is not a target", "Error", 1);
 				return;
 			}
-			System.out.println("target");
+			animatePlayer(clickedCell);
+			targets.clear();
+			clearTargetRooms();
+			repaint();
 			//TODO finish
 		}
+
+		private void clearTargetRooms() {
+			for (Room room : targetRooms) {
+				room.setTarget(false);
+			}
+			targetRooms.clear();
+		}
 		
+		// method that animates the player moving to new spot
+		private void animatePlayer(BoardCell clickedCell) {
+			Thread thread = new Thread();
+			BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
+			int xSpeed = Math.abs(currentCell.getX() - clickedCell.getX()) / 50;
+			int ySpeed = Math.abs(currentCell.getY() - clickedCell.getY()) / 50;
+			currentPlayer.setAnimate(true);
+			
+			// animate player somehow
+			
+			currentPlayer.setAnimate(false);
+			currentPlayer.setLocation(clickedCell.getRow(), clickedCell.getCol());
+		}
+		
+		// method to return the cell that the mouse clicked
 		private BoardCell getMouseCell() {
 			int x = getMousePosition().x;
 			int y = getMousePosition().y;
 			for (BoardCell[] cellRow : grid) {
 				for (BoardCell cell : cellRow) {
-					if (cell.containsClick(x, y)) {
+					// if player clicked on a room cell then direct to center cell
+					if (cell.containsClick(x, y) && cell.isRoom()) {
+						return roomMap.get(cell.getInitial()).getCenterCell();
+					}
+					else if (cell.containsClick(x, y)) {
 						return cell;
 					}
 				}

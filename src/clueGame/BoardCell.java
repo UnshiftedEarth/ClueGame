@@ -49,8 +49,13 @@ public class BoardCell implements Comparable<BoardCell> {
 		x = loc.calcX(this);
 		y = loc.calcY(this); 
 		
+		// check if cell is apart of target room
+		if (roomMap.get(initial).isTarget()) {
+			g.setColor(new Color(0, 205, 255));
+			g.fillRect(x + loc.SPACING/2, y + loc.SPACING/2, w, h);
+		}
 		// paint cell gray if cell is room
-		if (isRoom) {
+		else if (isRoom) {
 			g.setColor(Color.LIGHT_GRAY);
 			g.fillRect(x + loc.SPACING/2, y + loc.SPACING/2, w, h);
 		}

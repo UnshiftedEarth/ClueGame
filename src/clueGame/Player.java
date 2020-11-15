@@ -14,6 +14,9 @@ public abstract class Player {
 	private Color color;
 	private int row;
 	private int column;
+	private int x;
+	private int y;
+	private boolean animate;
 	boolean finished;
 	private Set<Card> hand;
 	protected Set<Card> seenCards;
@@ -84,12 +87,18 @@ public abstract class Player {
 		// gather data from location object
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
-		int x = loc.calcX(column);
-		int y = loc.calcY(row);
-		x += loc.SPACING;
-		y += loc.SPACING;
+		if (animate) {
+			System.out.print(animate);
+		}
+		else {
+			x = loc.calcX(column);
+			y = loc.calcY(row);
+			x += loc.SPACING;
+			y += loc.SPACING;
+		}
 		w -= loc.SPACING;
 		h -= loc.SPACING;
+		
 		
 		// paint the player
 		g.setColor(color);
@@ -138,6 +147,26 @@ public abstract class Player {
 
 	public int getColumn() {
 		return column;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+	
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void setAnimate(boolean b) {
+		animate = b;
 	}
 
 	public void setLocation(int row, int col) {

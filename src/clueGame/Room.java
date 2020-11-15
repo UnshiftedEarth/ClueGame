@@ -11,6 +11,7 @@ public class Room {
 	private BoardCell centerCell;
 	private BoardCell labelCell;
 	private Room secretPassage;
+	private boolean target;
 	private Set<BoardCell> doorList;
 	
 
@@ -61,6 +62,14 @@ public class Room {
 		this.name = name;
 	}
 	
+	public boolean isTarget() {
+		return target;
+	}
+
+	public void setTarget(boolean target) {
+		this.target = target;
+	}
+
 	public void addToDoorList(BoardCell cell) {
 		doorList.add(cell);
 	}
