@@ -17,6 +17,7 @@ public abstract class Player {
 	private int x;
 	private int y;
 	private boolean animate;
+	private boolean offset;
 	boolean finished;
 	private Set<Card> hand;
 	protected Set<Card> seenCards;
@@ -33,12 +34,14 @@ public abstract class Player {
 		this.name = name;
 		setColor(color);
 		hand = new HashSet<>();
+		seenCards = new HashSet<>();
 	}
 	
 	public Player(String name, String color, int r, int c) {
 		this.name = name;
 		setColor(color);
 		hand = new HashSet<>();
+		seenCards = new HashSet<>();
 		setLocation(r, c);
 	}
 	
@@ -87,8 +90,18 @@ public abstract class Player {
 		// gather data from location object
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
+		int n = sameLocationNumber();
+		// if animation is active
 		if (animate) {
 			System.out.print(animate);
+		}
+		// if multiple players in a room
+		else if (n > 0) {
+			x = loc.calcX(column);
+			y = loc.calcY(row);
+			x += loc.SPACING;
+			y += loc.SPACING;
+			x += 10 * n;
 		}
 		else {
 			x = loc.calcX(column);
@@ -99,12 +112,29 @@ public abstract class Player {
 		w -= loc.SPACING;
 		h -= loc.SPACING;
 		
-		
 		// paint the player
 		g.setColor(color);
 		g.fillOval(x, y, w, h);
 		g.setColor(Color.BLACK);
 		g.drawOval(x, y, w, h);
+	}
+	
+	public boolean isInRoom() {
+		if (board.getCell(row, column).isRoomCenter()) {
+			return true;
+		}
+		return false;
+	}
+	
+	private int sameLocationNumber() {
+		int count = 0;
+		for (Player player : board.getPlayers()) {
+			if (player.getRow() == row && player.getColumn() == column && !player.equals(this) && !player.offset) {
+				count++;
+				offset = true;
+			}
+		}
+		return count;
 	}
 	
 	public void updateSeen(Card seenCard) {
@@ -157,6 +187,10 @@ public abstract class Player {
 		return y;
 	}
 	
+	public void setOffset(boolean offset) {
+		this.offset = offset;
+	}
+
 	public void setX(int x) {
 		this.x = x;
 	}

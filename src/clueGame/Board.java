@@ -510,6 +510,9 @@ public class Board extends JPanel {
 		for (Player player : players) {
 			player.draw(g, location);
 		}
+		for (Player player : players) {
+			player.setOffset(false);
+		}
 	}
 	
 	// simple method to see if a cell is a target or not
@@ -539,46 +542,10 @@ public class Board extends JPanel {
 			targets.clear();
 			clearTargetRooms();
 			repaint();
-			//TODO finish
-		}
-
-		private void clearTargetRooms() {
-			for (Room room : targetRooms) {
-				room.setTarget(false);
+			if (currentPlayer.isInRoom()) {
+				// TODO handle suggestion
 			}
-			targetRooms.clear();
-		}
-		
-		// method that animates the player moving to new spot
-		private void animatePlayer(BoardCell clickedCell) {
-			Thread thread = new Thread();
-			BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
-			int xSpeed = Math.abs(currentCell.getX() - clickedCell.getX()) / 50;
-			int ySpeed = Math.abs(currentCell.getY() - clickedCell.getY()) / 50;
-			currentPlayer.setAnimate(true);
-			
-			// animate player somehow
-			
-			currentPlayer.setAnimate(false);
-			currentPlayer.setLocation(clickedCell.getRow(), clickedCell.getCol());
-		}
-		
-		// method to return the cell that the mouse clicked
-		private BoardCell getMouseCell() {
-			int x = getMousePosition().x;
-			int y = getMousePosition().y;
-			for (BoardCell[] cellRow : grid) {
-				for (BoardCell cell : cellRow) {
-					// if player clicked on a room cell then direct to center cell
-					if (cell.containsClick(x, y) && cell.isRoom()) {
-						return roomMap.get(cell.getInitial()).getCenterCell();
-					}
-					else if (cell.containsClick(x, y)) {
-						return cell;
-					}
-				}
-			}
-			return null;
+			currentPlayer.setFinished(true);
 		}
 
 		@Override
@@ -591,6 +558,50 @@ public class Board extends JPanel {
 		public void mouseReleased(MouseEvent e) {}
 	}
 	
+	private void clearTargetRooms() {
+		for (Room room : targetRooms) {
+			room.setTarget(false);
+		}
+		targetRooms.clear();
+	}
+
+	// method that animates the player moving to new spot
+	private void animatePlayer(BoardCell targetCell) {
+		if (targetCell == null) {
+			return;
+		}
+		Thread thread = new Thread();
+		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
+		int xSpeed = Math.abs(currentCell.getX() - targetCell.getX()) / 50;
+		int ySpeed = Math.abs(currentCell.getY() - targetCell.getY()) / 50;
+		currentCell.setOccupied(false);
+		currentPlayer.setAnimate(true);
+
+		// animate player somehow
+
+		currentPlayer.setAnimate(false);
+		currentPlayer.setLocation(targetCell.getRow(), targetCell.getCol());
+		targetCell.setOccupied(true);
+	}
+	
+	// method to return the cell that the mouse clicked
+	private BoardCell getMouseCell() {
+		int x = getMousePosition().x;
+		int y = getMousePosition().y;
+		for (BoardCell[] cellRow : grid) {
+			for (BoardCell cell : cellRow) {
+				// if player clicked on a room cell then direct to center cell
+				if (cell.containsClick(x, y) && cell.isRoom()) {
+					return roomMap.get(cell.getInitial()).getCenterCell();
+				}
+				else if (cell.containsClick(x, y)) {
+					return cell;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public void buttonNext() {
 		if (currentPlayer instanceof HumanPlayer && !currentPlayer.isFinished()) {
 			JOptionPane.showMessageDialog(this, "Please Finish Your Turn", "Error", 1);
@@ -598,16 +609,41 @@ public class Board extends JPanel {
 		}
 		ArrayList<Player> playerOrder = getPlayerOrder(currentPlayer);
 		currentPlayer = playerOrder.get(1); // get next player
-		// TODO finish
+		ClueGame.rollDice();
+		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
+		calcTargets(currentCell, ClueGame.getRoll());
+		ClueGame.setTurn(currentPlayer);
+		if (currentPlayer instanceof HumanPlayer) {
+			repaint();
+			currentPlayer.setFinished(false);
+			return;
+		}
+		// TODO do accusation for computer player?
+		ComputerPlayer comp = (ComputerPlayer) currentPlayer;
+		BoardCell target = comp.selectTarget(targets);
+		animatePlayer(target);
+		// clear the targets after moving player
+		targets.clear();
+		clearTargetRooms();
+		// TODO Make a suggestion for computer Player
+		repaint();
 	}
 	
 	// Method to start the game
 	public void playGame() {
+		setOccupiedCells();
 		currentPlayer = players.get(0);
 		ClueGame.rollDice();
+		ClueGame.setTurn(currentPlayer);
 		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
 		calcTargets(currentCell, ClueGame.getRoll());
 		repaint();
+	}
+	
+	private void setOccupiedCells() {
+		for (Player player : players) {
+			grid[player.getRow()][player.getColumn()].setOccupied(true);
+		}
 	}
 
 	

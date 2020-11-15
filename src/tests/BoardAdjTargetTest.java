@@ -54,7 +54,6 @@ class BoardAdjTargetTest {
 		assertTrue(testList.contains(board.getCell(13, 9)));
 	}
 
-
 	// test to ensure that room cells not center have no adjacencies
 	// these tests are light orange on spreadsheet
 	@Test 

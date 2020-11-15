@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Random;
 
@@ -32,6 +33,12 @@ public class ClueGame extends JFrame {
 		Random random = new Random();
 		roll = random.nextInt(6) + 1;
 		controlPanel.setRoll("" + roll);
+	}
+	
+	public static void setTurn(Player player) {
+		Color color = player.getColor();
+		String name = player.getName();
+		controlPanel.setTurnDescription(name, color);
 	}
 	
 	public static int getRoll() {

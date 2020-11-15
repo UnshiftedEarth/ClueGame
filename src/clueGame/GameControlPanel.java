@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -120,8 +121,9 @@ public class GameControlPanel extends JPanel {
 		roll.setText(r);
 	}
 
-	public void setTurnDescription(String d) {
+	public void setTurnDescription(String d, Color color) {
 		turnDescription.setText(d);
+		turnDescription.setBackground(color);
 	}
 
 	public static void main(String[] args) {
@@ -135,7 +137,7 @@ public class GameControlPanel extends JPanel {
 		
 		// test the setters
 		control.setGuess("Blue");
-		control.setTurnDescription("I don't have a guess. Sorry :(");
+		control.setTurnDescription("I don't have a guess. Sorry :(", Color.GRAY);
 		control.setRoll("3");
 		control.setResult("You lose then");
 	}

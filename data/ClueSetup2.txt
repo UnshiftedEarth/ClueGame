@@ -1,0 +1,27 @@
+//Rooms
+Room, Laboratory, L
+Room, Specimen, P
+Room, Admin, A
+Room, Weapons, W
+Room, Oxygen, O
+Room, Security, S 
+Room, Electrical, E
+Room, Storage, G
+Room, Office, F
+// Players
+Player, Human, Blue, cyan, 1, 21
+Player, Computer, Green, green, 1, 21
+Player, Computer, Pink, pink, 1, 21
+Player, Computer, Yellow, yellow, 2, 15
+Player, Computer, Red, red, 1, 15
+Player, Computer, Orange, orange, 1, 21
+// Weapons
+Weapon, Gun
+Weapon, Knife
+Weapon, Hands
+Weapon, Spike
+Weapon, Bat
+Weapon, Bow
+// other spaces 
+Space, Hallway, H 
+Space, Unused, X
