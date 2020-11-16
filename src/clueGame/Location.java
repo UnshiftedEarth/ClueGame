@@ -9,6 +9,9 @@ public class Location {
 	private int doorHeight;
 	private int fontSize;
 	private int playerOffset;
+	private int xSAdj;
+	private int ySAdj;
+	private int fontSizeS;
 	public static final int SPACING = 2;
 	
 	public Location(double width, double height, int numRows, int numCols) {
@@ -38,6 +41,9 @@ public class Location {
 		doorHeight = (int) Math.floor(proportion/117);
 		fontSize = (int) Math.ceil(proportion/40);
 		playerOffset = (int) Math.ceil(proportion/58);
+		xSAdj = (int) Math.ceil(proportion/95);
+		ySAdj = (int) Math.ceil(proportion/150);
+		fontSizeS = (int) Math.ceil(proportion/30);
 	}
 	
 	/*
@@ -88,6 +94,18 @@ public class Location {
 
 	public int getPlayerOffset() {
 		return playerOffset;
+	}
+
+	public int getxSAdj() {
+		return xSAdj;
+	}
+
+	public int getySAdj() {
+		return ySAdj;
+	}
+
+	public int getFontSizeS() {
+		return fontSizeS;
 	}
 	
 }

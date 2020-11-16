@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -49,15 +50,25 @@ public class BoardCell implements Comparable<BoardCell> {
 		x = loc.calcX(this);
 		y = loc.calcY(this); 
 		
+		// if cell is secret passage cell
+		if (secretPassage != '\u0000') {
+			g.setColor(new Color(255, 171, 0));
+			g.fillRect(x + loc.SPACING/2, y + loc.SPACING/2, w, h);
+			g.setColor(Color.BLUE);
+			g.setFont(new Font("Comic Sans MS", Font.BOLD, loc.getFontSizeS()));
+			g.drawString("S", x + loc.getxSAdj(), y + h - loc.getySAdj());
+			g.setColor(Color.BLACK);
+			g.drawRect(x + loc.SPACING/2, y + loc.SPACING/2, w-loc.SPACING/2, h-loc.SPACING/2);
+		}
 		// check if cell is apart of target room
-		if (roomMap.get(initial).isTarget()) {
+		else if (roomMap.get(initial).isTarget()) {
 			g.setColor(new Color(0, 205, 255));
 			g.fillRect(x + loc.SPACING/2, y + loc.SPACING/2, w, h);
 		}
 		// paint cell gray if cell is room
 		else if (isRoom) {
-			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(x + loc.SPACING/2, y + loc.SPACING/2, w, h);
+				g.setColor(Color.LIGHT_GRAY);
+				g.fillRect(x + loc.SPACING/2, y + loc.SPACING/2, w, h);
 		}
 		// paint cell yellow for standard walkway
 		else {

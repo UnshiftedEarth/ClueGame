@@ -24,6 +24,7 @@ public class ClueGame extends JFrame {
 	
 	public ClueGame() {
 		controlPanel = new GameControlPanel();
+		controlPanel.setPreferredSize(new Dimension(0, 135));
 		cardsPanel = new ClueCardsPanel();
 		cardsPanel.setPreferredSize(new Dimension(160, 0));
 		setup();

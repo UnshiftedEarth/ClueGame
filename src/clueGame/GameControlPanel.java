@@ -2,6 +2,8 @@ package clueGame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,8 +22,10 @@ public class GameControlPanel extends JPanel {
 	private JTextField guess;
 	private JTextField roll;
 	private JTextField turnDescription;
+	private Font font;
 	
 	public GameControlPanel() {
+		font = new Font("Comic Sans MS", Font.BOLD, 20);
 		// setup up initial panels
 		JPanel gameControlPanel = new JPanel();
 		JPanel firstRow = new JPanel();
@@ -39,8 +43,10 @@ public class GameControlPanel extends JPanel {
 		JPanel roll = createRollPanel();
 		firstRow.add(roll);
 		JButton makeAccusation = new JButton("Make Accusation");
+		makeAccusation.setFont(new Font("Helvetica", Font.BOLD, 20));
 		firstRow.add(makeAccusation);
 		JButton next = new JButton("Next!");
+		next.setFont(new Font("Helvetica", Font.BOLD, 20));
 		next.addActionListener(new ButtonListner());
 		firstRow.add(next);
 		
@@ -80,10 +86,13 @@ public class GameControlPanel extends JPanel {
 	private JPanel createRollPanel() {
 		JPanel rollPanel = new JPanel();
 		JLabel label = new JLabel("Roll:");
+		label.setFont(font);
 		roll = new JTextField(5);
 		roll.setEditable(false);
 		rollPanel.add(label);
 		rollPanel.add(roll);
+		roll.setFont(font);
+		//roll.setPreferredSize(new Dimension(4,4));
 		return rollPanel;
 	}
 	
@@ -91,8 +100,11 @@ public class GameControlPanel extends JPanel {
 	private JPanel createWhoseTurnPanel() {
 		JPanel whoseTurnPanel = new JPanel();
 		JLabel label = new JLabel("Whose Turn?");
+		label.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
 		turnDescription = new JTextField(16);
 		turnDescription.setEditable(false);
+		turnDescription.setHorizontalAlignment(JTextField.CENTER);
+		turnDescription.setFont(new Font("Comic Sans MS", Font.PLAIN, 15));
 		whoseTurnPanel.add(label);
 		whoseTurnPanel.add(turnDescription);
 		return whoseTurnPanel;

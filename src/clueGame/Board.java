@@ -558,6 +558,7 @@ public class Board extends JPanel {
 		public void mouseReleased(MouseEvent e) {}
 	}
 	
+	// clears the target rooms set
 	private void clearTargetRooms() {
 		for (Room room : targetRooms) {
 			room.setTarget(false);
@@ -565,21 +566,22 @@ public class Board extends JPanel {
 		targetRooms.clear();
 	}
 
-	// method that animates the player moving to new spot
+	/*
+	 * Method that animates player moving to different cells.
+	 * not currently working
+	 */
 	private void animatePlayer(BoardCell targetCell) {
 		if (targetCell == null) {
 			return;
 		}
 		Thread thread = new Thread();
 		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
-		int xSpeed = Math.abs(currentCell.getX() - targetCell.getX()) / 50;
-		int ySpeed = Math.abs(currentCell.getY() - targetCell.getY()) / 50;
+		//int xSpeed = Math.abs(currentCell.getX() - targetCell.getX()) / 50;
+		//int ySpeed = Math.abs(currentCell.getY() - targetCell.getY()) / 50;
 		currentCell.setOccupied(false);
-		currentPlayer.setAnimate(true);
+		//currentPlayer.setAnimate(true);
 
-		// animate player somehow
-
-		currentPlayer.setAnimate(false);
+		//currentPlayer.setAnimate(false);
 		currentPlayer.setLocation(targetCell.getRow(), targetCell.getCol());
 		targetCell.setOccupied(true);
 	}
@@ -602,6 +604,9 @@ public class Board extends JPanel {
 		return null;
 	}
 	
+	/*
+	 * Method that runs when the next button is pressed
+	 */
 	public void buttonNext() {
 		if (currentPlayer instanceof HumanPlayer && !currentPlayer.isFinished()) {
 			JOptionPane.showMessageDialog(this, "Please Finish Your Turn", "Error", 1);
