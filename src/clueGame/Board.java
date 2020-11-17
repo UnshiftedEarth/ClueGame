@@ -631,8 +631,39 @@ public class Board extends JPanel {
 		// clear the targets after moving player
 		targets.clear();
 		clearTargetRooms();
-		// TODO Make a suggestion for computer Player
+		// Make a suggestion for computer Player
+		makeComputerSuggestion();
 		repaint();
+	}
+	
+	// Make a suggestion for computer Player
+	private void makeComputerSuggestion() {
+		if (grid[currentPlayer.getRow()][currentPlayer.getColumn()].isRoomCenter()) {
+			ComputerPlayer comp = (ComputerPlayer) currentPlayer;
+			Solution suggestion = comp.createSuggestion();
+			String name = suggestion.person.getName();
+			Player suggested = null;
+			for (Player player : players) {
+				if (player.getName().equals(name)) {
+					suggested = player;
+					break;
+				}
+			}
+			suggested.setLocation(comp.getRow(), comp.getColumn());
+			Card disprove = handleSuggestion(comp, suggestion);
+			if (disprove == null) {
+				comp.setAccusationFlag(true);
+			}
+			else {
+				comp.updateSeen(disprove);
+			}
+			ClueGame.setGuess(suggestion, comp);
+			ClueGame.setResult(disprove, comp);
+		}
+		else {
+			ClueGame.clearGuess();
+			ClueGame.clearResult();
+		}
 	}
 	
 	// Method to start the game

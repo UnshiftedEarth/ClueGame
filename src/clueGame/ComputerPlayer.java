@@ -7,6 +7,7 @@ import java.util.Set;
 public class ComputerPlayer extends Player {
 	
 	Random random = new Random();
+	private boolean accusationFlag;
 	
 	public ComputerPlayer() {
 		super();
@@ -81,4 +82,7 @@ public class ComputerPlayer extends Player {
 	}
 	
 	// setters and getters 
+	public void setAccusationFlag(boolean accusationFlag) {
+		this.accusationFlag = accusationFlag;
+	}	
 }

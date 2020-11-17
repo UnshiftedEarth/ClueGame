@@ -57,6 +57,41 @@ public class ClueGame extends JFrame {
 		cardsPanel.setVisible(true);
 	}
 	
+	public static void setGuess(Solution suggestion, Player player) {
+		String person = suggestion.person.getName();
+		String weapon = suggestion.weapon.getName();
+		String room = suggestion.room.getName();
+		String guess = person + ", " + room + ", " + weapon;
+		controlPanel.setGuess(guess, player.getColor());
+	}
+	
+	public static void setResult(Card disprove, Player player) {
+		// find disprove player
+		Player holding = null;
+		for (Player p : Board.getInstance().getPlayers()) {
+			if (p.hasCard(disprove)) {
+				holding = p;
+			}
+		}
+		if (disprove == null) {
+			controlPanel.setResult("No New Clue", Color.WHITE);
+		}
+		else if (player instanceof ComputerPlayer) {
+			controlPanel.setResult("Suggestion Disproven", holding.getColor());
+		}
+		else {
+			controlPanel.setResult(disprove.getName(), holding.getColor());
+		}
+	}
+	
+	public static void clearResult() {
+		controlPanel.setResult("", new Color(0,0,0));
+	}
+	
+	public static void clearGuess() {
+		controlPanel.setGuess("", new Color(0,0,0));
+	}
+	
 	public static int getRoll() {
 		return roll;
 	}

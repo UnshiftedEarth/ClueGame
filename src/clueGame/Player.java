@@ -137,6 +137,15 @@ public abstract class Player {
 		return count;
 	}
 	
+	public boolean hasCard(Card card) {
+		for (Card c : hand) {
+			if (c.equals(card)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void updateSeen(Card seenCard) {
 		seenCards.add(seenCard);
 	}

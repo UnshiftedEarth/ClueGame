@@ -67,6 +67,8 @@ public class GameControlPanel extends JPanel {
 		resultPanel.setBorder(new TitledBorder(new EtchedBorder(), "Guess Result"));
 		result = new JTextField();
 		result.setEditable(false);
+		result.setFont(new Font("Helvetica", Font.BOLD, 20));
+		result.setHorizontalAlignment(JTextField.CENTER);
 		resultPanel.add(result);
 		return resultPanel;
 	}
@@ -78,6 +80,8 @@ public class GameControlPanel extends JPanel {
 		guessPanel.setBorder(new TitledBorder(new EtchedBorder(), "Guess"));
 		guess = new JTextField();
 		guess.setEditable(false);
+		guess.setFont(new Font("Helvetica", Font.BOLD, 20));
+		guess.setHorizontalAlignment(JTextField.CENTER);
 		guessPanel.add(guess);
 		return guessPanel;
 	}
@@ -121,12 +125,26 @@ public class GameControlPanel extends JPanel {
 	}
 
 	// setters 
-	public void setResult(String r) {
+	public void setResult(String r, Color c) {
 		result.setText(r);
+		if (r.equals("")) {
+			result.setOpaque(false);
+		}
+		else {
+			result.setOpaque(true);
+			result.setBackground(c);
+		}
 	}
 
-	public void setGuess(String g) {
+	public void setGuess(String g, Color c) {
 		guess.setText(g);
+		if (g.equals("")) {
+			guess.setOpaque(false);
+		}
+		else {
+			guess.setOpaque(true);
+			guess.setBackground(c);
+		}
 	}
 
 	public void setRoll(String r) {
@@ -148,10 +166,10 @@ public class GameControlPanel extends JPanel {
 		display.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// test the setters
-		control.setGuess("Blue");
+		control.setGuess("Blue", Color.GREEN);
 		control.setTurnDescription("I don't have a guess. Sorry :(", Color.GRAY);
 		control.setRoll("3");
-		control.setResult("You lose then");
+		control.setResult("You lose then", Color.GREEN);
 	}
 
 }
