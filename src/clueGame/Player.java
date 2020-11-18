@@ -20,7 +20,7 @@ public abstract class Player {
 	private boolean offset;
 	private boolean roomTarget;
 	private boolean finished;
-	private Set<Card> hand;
+	protected Set<Card> hand;
 	protected Set<Card> seenCards;
 	protected Board board = Board.getInstance();
 	

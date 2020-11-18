@@ -632,6 +632,8 @@ public class Board extends JPanel {
 	 * Submit button method that is called when human makes a suggestion
 	 */
 	public void buttonMakeSuggestion(Solution suggestion) {
+		// find suggested player
+		BoardCell currentPlayerCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
 		Player suggested = null;
 		for (Player player : players) {
 			if (player.getName().equals(suggestion.person.getName())) {
@@ -639,9 +641,14 @@ public class Board extends JPanel {
 				break;
 			}
 		}
-		grid[suggested.getRow()][suggested.getColumn()].setOccupied(false);
+		
+		// if suggested player is moved to a different room, set a flag
+		BoardCell suggestedPlayerCell = grid[suggested.getRow()][suggested.getColumn()];
+		suggestedPlayerCell.setOccupied(false);
+		if (!suggestedPlayerCell.equals(currentPlayerCell)) {
+			suggested.setRoomTarget(true);
+		}
 		suggested.setLocation(currentPlayer.getRow(), currentPlayer.getColumn());
-		suggested.setRoomTarget(true);
 		Card disprove = handleSuggestion(currentPlayer, suggestion);
 		
 		ClueGame.setGuess(suggestion, currentPlayer);
@@ -649,10 +656,12 @@ public class Board extends JPanel {
 		repaint();
 		
 		// find the player who disproved the suggestion
-		for (Player player : players) {
-			if (player.hasCard(disprove)) {
-				ClueGame.addToSeen(disprove, player);
-				break;
+		if (disprove != null) {
+			for (Player player : players) {
+				if (player.hasCard(disprove)) {
+					ClueGame.addToSeen(disprove, player);
+					break;
+				}
 			}
 		}
 	}
@@ -682,6 +691,7 @@ public class Board extends JPanel {
 			repaint();
 			if (targets.size() == 0) {
 				currentPlayer.setFinished(true);
+				JOptionPane.showMessageDialog(this, "No move is avaliable", "No move", 1);
 			}
 			else {
 				currentPlayer.setFinished(false);
@@ -719,7 +729,8 @@ public class Board extends JPanel {
 	 * Flow method for computer making a suggestion and updating GUI
 	 */
 	private void makeComputerSuggestion() {
-		if (grid[currentPlayer.getRow()][currentPlayer.getColumn()].isRoomCenter()) {
+		BoardCell currentPlayerCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
+		if (currentPlayerCell.isRoomCenter()) {
 			ComputerPlayer comp = (ComputerPlayer) currentPlayer;
 			Solution suggestion = comp.createSuggestion();
 			String name = suggestion.person.getName();
@@ -730,10 +741,17 @@ public class Board extends JPanel {
 					break;
 				}
 			}
-			grid[suggested.getRow()][suggested.getColumn()].setOccupied(false);
+			
+			// if suggested player is moved to a different room, set a flag
+			BoardCell suggestedPlayerCell = grid[suggested.getRow()][suggested.getColumn()];
+			suggestedPlayerCell.setOccupied(false);
+			if (!suggestedPlayerCell.equals(currentPlayerCell)) {
+				suggested.setRoomTarget(true);
+			}
 			suggested.setLocation(comp.getRow(), comp.getColumn());
-			suggested.setRoomTarget(true);
 			Card disprove = handleSuggestion(comp, suggestion);
+			
+			// if no players can disprove set a possible accusation
 			if (disprove == null) {
 				comp.setAccusation(suggestion);
 			}

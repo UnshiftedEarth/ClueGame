@@ -60,7 +60,7 @@ public class ComputerPlayer extends Player {
 		for (BoardCell cell : targets) {
 			if (cell.isRoomCenter()) {
 				String roomName = board.getRoom(cell).getName(); 
-				if (!seenCards.contains(board.getCard(roomName))) {
+				if (!seenCards.contains(board.getCard(roomName)) && !hand.contains(board.getCard(roomName))) {
 					rooms.add(cell);
 				}
 			}
