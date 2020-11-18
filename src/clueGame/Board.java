@@ -2,6 +2,8 @@ package clueGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
@@ -624,7 +626,7 @@ public class Board extends JPanel {
 			currentPlayer.setFinished(false);
 			return;
 		}
-		// TODO do accusation for computer player?
+		makeComputerAccusation();
 		ComputerPlayer comp = (ComputerPlayer) currentPlayer;
 		BoardCell target = comp.selectTarget(targets);
 		animatePlayer(target);
@@ -636,6 +638,18 @@ public class Board extends JPanel {
 		repaint();
 	}
 	
+	private void makeComputerAccusation() {
+		ComputerPlayer comp = (ComputerPlayer) currentPlayer;
+		Solution accusation = comp.getAccusation();
+		if (accusation.equals(theAnswer)) {
+			String end1 = "The player " + comp.getName() + " has guessed the correct solution";
+			String end2 = "\nThe answer was: " + theAnswer.person.getName() + " with the " + 
+			theAnswer.weapon.getName() + " in the " + theAnswer.room.getName();
+			JOptionPane.showMessageDialog(this, end1 + end2, "You Lose", 1);
+			System.exit(0);
+		}
+	}
+
 	// Make a suggestion for computer Player
 	private void makeComputerSuggestion() {
 		if (grid[currentPlayer.getRow()][currentPlayer.getColumn()].isRoomCenter()) {
@@ -652,7 +666,7 @@ public class Board extends JPanel {
 			suggested.setLocation(comp.getRow(), comp.getColumn());
 			Card disprove = handleSuggestion(comp, suggestion);
 			if (disprove == null) {
-				comp.setAccusationFlag(true);
+				comp.setAccusation(suggestion);
 			}
 			else {
 				comp.updateSeen(disprove);
@@ -676,6 +690,14 @@ public class Board extends JPanel {
 		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
 		calcTargets(currentCell, ClueGame.getRoll());
 		repaint();
+	}
+	
+	public void displayLoss() {
+		String end1 = "That is not correct, You lose.";
+		String endl = "\nThe correct solution is " + theAnswer.person.getName() + " with the " +
+		theAnswer.weapon.getName() + " in the " + theAnswer.room.getName();
+		JOptionPane.showMessageDialog(this, end1, "You Lose", 1);
+		System.exit(0);
 	}
 	
 	private void setOccupiedCells() {
@@ -756,6 +778,10 @@ public class Board extends JPanel {
 
 	public int getNumColumns() {
 		return NUM_COLUMNS;
+	}
+
+	public static Solution getTheAnswer() {
+		return theAnswer;
 	}
 
 	public void setConfigFiles(String csv, String txt) {

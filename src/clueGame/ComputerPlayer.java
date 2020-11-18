@@ -7,15 +7,17 @@ import java.util.Set;
 public class ComputerPlayer extends Player {
 	
 	Random random = new Random();
-	private boolean accusationFlag;
+	private Solution accusation;
 	
 	public ComputerPlayer() {
 		super();
+		accusation = new Solution();
 	}
 	
 	public ComputerPlayer(String name, String color, int row, int col) {
 		super(name, color);
 		super.setLocation(row, col);
+		accusation = new Solution();
 	}
 	
 	/*
@@ -82,7 +84,12 @@ public class ComputerPlayer extends Player {
 	}
 	
 	// setters and getters 
-	public void setAccusationFlag(boolean accusationFlag) {
-		this.accusationFlag = accusationFlag;
-	}	
+	public void setAccusation(Solution accusation) {
+		this.accusation = accusation;
+	}
+
+	public Solution getAccusation() {
+		return accusation;
+	}
+	
 }

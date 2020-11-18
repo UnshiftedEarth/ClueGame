@@ -44,10 +44,11 @@ public class GameControlPanel extends JPanel {
 		firstRow.add(roll);
 		JButton makeAccusation = new JButton("Make Accusation");
 		makeAccusation.setFont(new Font("Helvetica", Font.BOLD, 20));
+		makeAccusation.addActionListener(new AccusationListener());
 		firstRow.add(makeAccusation);
 		JButton next = new JButton("Next!");
 		next.setFont(new Font("Helvetica", Font.BOLD, 20));
-		next.addActionListener(new ButtonListner());
+		next.addActionListener(new ButtonListener());
 		firstRow.add(next);
 		
 		// add items to second row
@@ -114,7 +115,7 @@ public class GameControlPanel extends JPanel {
 		return whoseTurnPanel;
 	}
 	
-	private class ButtonListner implements ActionListener {
+	private class ButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -123,11 +124,21 @@ public class GameControlPanel extends JPanel {
 		}
 		
 	}
+	
+	private class AccusationListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			AccusationFrame display = new AccusationFrame();
+			display.setVisible(true);
+		}
+		
+	}
 
 	// setters 
 	public void setResult(String r, Color c) {
 		result.setText(r);
-		if (r.equals("")) {
+		if (r.equals("") || c.equals(Color.WHITE)) {
 			result.setOpaque(false);
 		}
 		else {

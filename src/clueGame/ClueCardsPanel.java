@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
@@ -23,9 +24,11 @@ public class ClueCardsPanel extends JPanel{
 	private JPanel roomsSeen = new JPanel();
 	private JPanel weaponsInHand = new JPanel();
 	private JPanel weaponsSeen = new JPanel();
+	private Font font;
 	
 	
 	public ClueCardsPanel() {
+		font = new Font("Helvetica", Font.PLAIN, 15);
 		// create panel to hold components
 		JPanel knownCards = new JPanel();
 		TitledBorder titledBorder = new TitledBorder(new EtchedBorder(0), "Known Cards");
@@ -56,6 +59,7 @@ public class ClueCardsPanel extends JPanel{
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		panel.setBorder(new TitledBorder(new EtchedBorder(), name));
 		JLabel inHand = new JLabel("In Hand:");
+		inHand.setFont(new Font("Helvetica", Font.BOLD, 15));
 		inHand.setPreferredSize(new Dimension(0,60));
 		panel.add(inHand);
 		
@@ -63,16 +67,19 @@ public class ClueCardsPanel extends JPanel{
 		handCards.setLayout(new GridLayout(0,1));
 		panel.add(handCards);
 		JTextField noneCard1 = new JTextField("None", 10);
+		noneCard1.setFont(font);
 		handCards.add(noneCard1);
 		noneCard1.setEditable(false);
 		
 		//add seen label and sub-panel to hold cards
 		JLabel seen = new JLabel("Seen:");
+		seen.setFont(new Font("Helvetica", Font.BOLD, 15));
 		seen.setPreferredSize(new Dimension(0,60));
 		panel.add(seen);
 		seenCards.setLayout(new GridLayout(0,1));
 		panel.add(seenCards);
 		JTextField noneCard2 = new JTextField("None");
+		noneCard2.setFont(font);
 		noneCard2.setEditable(false);
 		seenCards.add(noneCard2);
 		
@@ -82,6 +89,7 @@ public class ClueCardsPanel extends JPanel{
 	// method to add a card name to the hand 
 	public void addToHand(String name, CardType type, Player player) {
 		JTextField card = new JTextField(name);
+		card.setFont(font);
 		card.setBackground(player.getColor());
 		card.setEditable(false);
 		if (type == CardType.PLAYER) {
@@ -98,6 +106,7 @@ public class ClueCardsPanel extends JPanel{
 	// method to add card name to the seen list
 	public void addToSeen(String name, CardType type, Player player) {
 		JTextField card = new JTextField(name);
+		card.setFont(font);
 		card.setBackground(player.getColor());
 		card.setPreferredSize(new Dimension(0,60));
 		card.setEditable(false);

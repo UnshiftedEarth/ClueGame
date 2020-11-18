@@ -26,7 +26,7 @@ public class ClueGame extends JFrame {
 		controlPanel = new GameControlPanel();
 		controlPanel.setPreferredSize(new Dimension(0, 135));
 		cardsPanel = new ClueCardsPanel();
-		cardsPanel.setPreferredSize(new Dimension(160, 0));
+		cardsPanel.setPreferredSize(new Dimension(200, 0));
 		setup();
 		instance.playGame();
 	}
@@ -66,6 +66,10 @@ public class ClueGame extends JFrame {
 	}
 	
 	public static void setResult(Card disprove, Player player) {
+		if (disprove == null) {
+			controlPanel.setResult("No New Clue", Color.WHITE);
+			return;
+		}
 		// find disprove player
 		Player holding = null;
 		for (Player p : Board.getInstance().getPlayers()) {
@@ -73,10 +77,7 @@ public class ClueGame extends JFrame {
 				holding = p;
 			}
 		}
-		if (disprove == null) {
-			controlPanel.setResult("No New Clue", Color.WHITE);
-		}
-		else if (player instanceof ComputerPlayer) {
+		if (player instanceof ComputerPlayer) {
 			controlPanel.setResult("Suggestion Disproven", holding.getColor());
 		}
 		else {
