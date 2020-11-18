@@ -18,7 +18,8 @@ public abstract class Player {
 	private int y;
 	private boolean animate;
 	private boolean offset;
-	boolean finished;
+	private boolean roomTarget;
+	private boolean finished;
 	private Set<Card> hand;
 	protected Set<Card> seenCards;
 	protected Board board = Board.getInstance();
@@ -217,6 +218,14 @@ public abstract class Player {
 		this.column = col;
 	}
 	
+	public boolean isRoomTarget() {
+		return roomTarget;
+	}
+
+	public void setRoomTarget(boolean roomTarget) {
+		this.roomTarget = roomTarget;
+	}
+
 	public void setColor(String c) {
 		try {
 		    Field field = Class.forName("java.awt.Color").getField(c);

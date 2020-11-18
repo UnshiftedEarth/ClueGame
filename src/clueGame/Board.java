@@ -617,13 +617,20 @@ public class Board extends JPanel {
 	
 	// Method that runs when the user wishes to make an Accusation
 	public void buttonMakeAccusation() {
-		AccusationFrame frame = new AccusationFrame();
-		frame.setLocationRelativeTo(this);
-		frame.setModal(true);
-		frame.setVisible(true);
+		if (currentPlayer instanceof HumanPlayer && !currentPlayer.isFinished()) {
+			AccusationFrame frame = new AccusationFrame();
+			frame.setLocationRelativeTo(this);
+			frame.setModal(true);
+			frame.setVisible(true);
+		}
+		else {
+			JOptionPane.showMessageDialog(this, "It is not your turn");
+		}
 	}
 	
-	// Method that runs when user makes a suggestion
+	/*
+	 * Submit button method that is called when human makes a suggestion
+	 */
 	public void buttonMakeSuggestion(Solution suggestion) {
 		Player suggested = null;
 		for (Player player : players) {
@@ -634,6 +641,7 @@ public class Board extends JPanel {
 		}
 		grid[suggested.getRow()][suggested.getColumn()].setOccupied(false);
 		suggested.setLocation(currentPlayer.getRow(), currentPlayer.getColumn());
+		suggested.setRoomTarget(true);
 		Card disprove = handleSuggestion(currentPlayer, suggestion);
 		
 		ClueGame.setGuess(suggestion, currentPlayer);
@@ -662,13 +670,26 @@ public class Board extends JPanel {
 		ClueGame.rollDice();
 		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
 		calcTargets(currentCell, ClueGame.getRoll());
+		
+		// if player was moved by another player, add room to target
+		if (currentPlayer.isRoomTarget()) {
+			targets.add(grid[currentPlayer.getRow()][currentPlayer.getColumn()]);
+		}
+		currentPlayer.setRoomTarget(false);
 		ClueGame.setTurn(currentPlayer);
 		// if current Player is human
 		if (currentPlayer instanceof HumanPlayer) {
 			repaint();
-			currentPlayer.setFinished(false);
+			if (targets.size() == 0) {
+				currentPlayer.setFinished(true);
+			}
+			else {
+				currentPlayer.setFinished(false);
+			}
 			return;
 		}
+		
+		// decide if computer should make accusation
 		makeComputerAccusation();
 		ComputerPlayer comp = (ComputerPlayer) currentPlayer;
 		BoardCell target = comp.selectTarget(targets);
@@ -681,6 +702,7 @@ public class Board extends JPanel {
 		repaint();
 	}
 	
+	// Method for deciding if computer wins or not
 	private void makeComputerAccusation() {
 		ComputerPlayer comp = (ComputerPlayer) currentPlayer;
 		Solution accusation = comp.getAccusation();
@@ -693,7 +715,9 @@ public class Board extends JPanel {
 		}
 	}
 
-	// Make a suggestion for computer Player
+	/*
+	 * Flow method for computer making a suggestion and updating GUI
+	 */
 	private void makeComputerSuggestion() {
 		if (grid[currentPlayer.getRow()][currentPlayer.getColumn()].isRoomCenter()) {
 			ComputerPlayer comp = (ComputerPlayer) currentPlayer;
@@ -708,6 +732,7 @@ public class Board extends JPanel {
 			}
 			grid[suggested.getRow()][suggested.getColumn()].setOccupied(false);
 			suggested.setLocation(comp.getRow(), comp.getColumn());
+			suggested.setRoomTarget(true);
 			Card disprove = handleSuggestion(comp, suggestion);
 			if (disprove == null) {
 				comp.setAccusation(suggestion);
@@ -736,6 +761,7 @@ public class Board extends JPanel {
 		repaint();
 	}
 	
+	// Display the human losing
 	public void displayLoss() {
 		String end1 = "That is not correct, You lose.";
 		String end2 = "\nThe correct solution is " + theAnswer.person.getName() + " with the " +
@@ -744,11 +770,13 @@ public class Board extends JPanel {
 		System.exit(0);
 	}
 	
+	// display the human winning
 	public void displayWin() {
 		JOptionPane.showMessageDialog(this, "Congratulations, You Win!", "You Win", 1);
 		System.exit(0);
 	}
 	
+	// Simple helper method to set all players cells to occupied at the start
 	private void setOccupiedCells() {
 		for (Player player : players) {
 			grid[player.getRow()][player.getColumn()].setOccupied(true);
