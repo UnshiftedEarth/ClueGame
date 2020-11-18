@@ -632,6 +632,7 @@ public class Board extends JPanel {
 				break;
 			}
 		}
+		grid[suggested.getRow()][suggested.getColumn()].setOccupied(false);
 		suggested.setLocation(currentPlayer.getRow(), currentPlayer.getColumn());
 		Card disprove = handleSuggestion(currentPlayer, suggestion);
 		
@@ -639,6 +640,7 @@ public class Board extends JPanel {
 		ClueGame.setResult(disprove, currentPlayer);
 		repaint();
 		
+		// find the player who disproved the suggestion
 		for (Player player : players) {
 			if (player.hasCard(disprove)) {
 				ClueGame.addToSeen(disprove, player);
@@ -704,6 +706,7 @@ public class Board extends JPanel {
 					break;
 				}
 			}
+			grid[suggested.getRow()][suggested.getColumn()].setOccupied(false);
 			suggested.setLocation(comp.getRow(), comp.getColumn());
 			Card disprove = handleSuggestion(comp, suggestion);
 			if (disprove == null) {
