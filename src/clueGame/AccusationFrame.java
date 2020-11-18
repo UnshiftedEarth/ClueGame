@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,9 +16,10 @@ import javax.swing.JTextField;
 
 public class AccusationFrame extends JDialog{
 	
-	JComboBox personP;
-	JComboBox weaponP;
-	JComboBox roomP;
+	private JComboBox personP;
+	private JComboBox weaponP;
+	private JComboBox roomP;
+	Font font = new Font("Helvetica", Font.BOLD, 15);
 	
 	private static Board instance = Board.getInstance();
 	
@@ -28,21 +30,29 @@ public class AccusationFrame extends JDialog{
 		
 		JLabel person = new JLabel("Person:");
 		person.setHorizontalAlignment(JTextField.CENTER);
+		person.setFont(font);
 		JLabel weapon = new JLabel("Weapon:");
 		weapon.setHorizontalAlignment(JTextField.CENTER);
+		weapon.setFont(font);
 		JLabel room = new JLabel("Room:");
+		room.setFont(font);
 		room.setHorizontalAlignment(JTextField.CENTER);
 				
 		JButton submit = new JButton("Submit");
 		submit.addActionListener(new SubmitListener());
+		submit.setFont(new Font("Helvetica", Font.BOLD, 20));
 		JButton cancel = new JButton("Cancel");
+		cancel.setFont(new Font("Helvetica", Font.BOLD, 20));
 		cancel.addActionListener(e -> {
 			this.setVisible(false);
 		});
 		
 		personP = new JComboBox();
+		personP.setFont(font);
 		weaponP = new JComboBox();
+		weaponP.setFont(font);
 		roomP = new JComboBox();
+		roomP.setFont(font);
 		
 		add(room);
 		add(roomP);
