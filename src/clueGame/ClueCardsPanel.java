@@ -130,6 +130,13 @@ public class ClueCardsPanel extends JPanel{
 			panel.add(card);
 		}
 		else {
+			// make sure card is not already in the list
+			for (Component c : items) {
+				JTextField field = (JTextField) c;
+				if (field.getText().equals(card.getText())) {
+					return;
+				}
+			}
 			panel.add(card);
 		}
 	}

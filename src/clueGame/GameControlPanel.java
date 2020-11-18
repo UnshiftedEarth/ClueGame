@@ -48,7 +48,7 @@ public class GameControlPanel extends JPanel {
 		firstRow.add(makeAccusation);
 		JButton next = new JButton("Next!");
 		next.setFont(new Font("Helvetica", Font.BOLD, 20));
-		next.addActionListener(new ButtonListener());
+		next.addActionListener(new NextListener());
 		firstRow.add(next);
 		
 		// add items to second row
@@ -115,7 +115,7 @@ public class GameControlPanel extends JPanel {
 		return whoseTurnPanel;
 	}
 	
-	private class ButtonListener implements ActionListener {
+	private class NextListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -129,8 +129,8 @@ public class GameControlPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			AccusationFrame display = new AccusationFrame();
-			display.setVisible(true);
+			Board instance = Board.getInstance();
+			instance.buttonMakeAccusation();
 		}
 		
 	}

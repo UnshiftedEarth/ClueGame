@@ -545,7 +545,7 @@ public class Board extends JPanel {
 			clearTargetRooms();
 			repaint();
 			if (currentPlayer.isInRoom()) {
-				// TODO handle suggestion
+				handleHumanSuggestion(clickedCell);
 			}
 			currentPlayer.setFinished(true);
 		}
@@ -606,6 +606,47 @@ public class Board extends JPanel {
 		return null;
 	}
 	
+	// This method displays the suggestion options
+	public void handleHumanSuggestion(BoardCell cell) {
+		String room = roomMap.get(cell.getInitial()).getName();
+		SuggestionFrame frame = new SuggestionFrame(room);
+		frame.setLocationRelativeTo(this);
+		frame.setModal(true);
+		frame.setVisible(true);
+	}
+	
+	// Method that runs when the user wishes to make an Accusation
+	public void buttonMakeAccusation() {
+		AccusationFrame frame = new AccusationFrame();
+		frame.setLocationRelativeTo(this);
+		frame.setModal(true);
+		frame.setVisible(true);
+	}
+	
+	// Method that runs when user makes a suggestion
+	public void buttonMakeSuggestion(Solution suggestion) {
+		Player suggested = null;
+		for (Player player : players) {
+			if (player.getName().equals(suggestion.person.getName())) {
+				suggested = player;
+				break;
+			}
+		}
+		suggested.setLocation(currentPlayer.getRow(), currentPlayer.getColumn());
+		Card disprove = handleSuggestion(currentPlayer, suggestion);
+		
+		ClueGame.setGuess(suggestion, currentPlayer);
+		ClueGame.setResult(disprove, currentPlayer);
+		repaint();
+		
+		for (Player player : players) {
+			if (player.hasCard(disprove)) {
+				ClueGame.addToSeen(disprove, player);
+				break;
+			}
+		}
+	}
+	
 	/*
 	 * Method that runs when the next button is pressed
 	 */
@@ -644,7 +685,7 @@ public class Board extends JPanel {
 		if (accusation.equals(theAnswer)) {
 			String end1 = "The player " + comp.getName() + " has guessed the correct solution";
 			String end2 = "\nThe answer was: " + theAnswer.person.getName() + " with the " + 
-			theAnswer.weapon.getName() + " in the " + theAnswer.room.getName();
+			theAnswer.weapon.getName() + " in " + theAnswer.room.getName();
 			JOptionPane.showMessageDialog(this, end1 + end2, "You Lose", 1);
 			System.exit(0);
 		}
@@ -694,9 +735,14 @@ public class Board extends JPanel {
 	
 	public void displayLoss() {
 		String end1 = "That is not correct, You lose.";
-		String endl = "\nThe correct solution is " + theAnswer.person.getName() + " with the " +
-		theAnswer.weapon.getName() + " in the " + theAnswer.room.getName();
-		JOptionPane.showMessageDialog(this, end1, "You Lose", 1);
+		String end2 = "\nThe correct solution is " + theAnswer.person.getName() + " with the " +
+		theAnswer.weapon.getName() + " in " + theAnswer.room.getName();
+		JOptionPane.showMessageDialog(this, end1 + end2, "You Lose", 1);
+		System.exit(0);
+	}
+	
+	public void displayWin() {
+		JOptionPane.showMessageDialog(this, "Congratulations, You Win!", "You Win", 1);
 		System.exit(0);
 	}
 	
@@ -770,6 +816,10 @@ public class Board extends JPanel {
 	
 	public static Board getInstance() {
 		return instance;
+	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
 	}
 
 	public int getNumRows() {

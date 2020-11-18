@@ -13,18 +13,17 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-public class AccusationFrame extends JDialog{
+public class SuggestionFrame extends JDialog {
 	
-	JComboBox personP;
-	JComboBox weaponP;
-	JComboBox roomP;
-	
+	private JComboBox personP;
+	private JComboBox weaponP;
+	private JTextField roomP;
 	private static Board instance = Board.getInstance();
 	
-	public AccusationFrame() {
+	public SuggestionFrame() {
 		setSize(400, 200);
 		setLayout(new GridLayout(4,2));
-		setTitle("Make an Accusation");
+		setTitle("Make an Suggestion");
 		
 		JLabel person = new JLabel("Person:");
 		person.setHorizontalAlignment(JTextField.CENTER);
@@ -34,15 +33,24 @@ public class AccusationFrame extends JDialog{
 		room.setHorizontalAlignment(JTextField.CENTER);
 				
 		JButton submit = new JButton("Submit");
-		submit.addActionListener(new SubmitListener());
 		JButton cancel = new JButton("Cancel");
+		
+		submit.addActionListener(e -> {
+			Solution suggestion = new Solution();
+			suggestion.person = instance.getCard(personP.getSelectedItem().toString());
+			suggestion.room = instance.getCard(roomP.getText());
+			suggestion.weapon = instance.getCard(weaponP.getSelectedItem().toString());
+			instance.buttonMakeSuggestion(suggestion);
+			this.setVisible(false);
+		});
 		cancel.addActionListener(e -> {
 			this.setVisible(false);
 		});
 		
 		personP = new JComboBox();
 		weaponP = new JComboBox();
-		roomP = new JComboBox();
+		roomP = new JTextField();
+		roomP.setEditable(false);
 		
 		add(room);
 		add(roomP);
@@ -52,12 +60,16 @@ public class AccusationFrame extends JDialog{
 		add(weaponP);
 		add(cancel);
 		add(submit);
-		
-		populateComboBoxes();
 	}
 	
-	private void populateComboBoxes() {
+	public SuggestionFrame(String room) {
+		this();
+		populateComboBoxes(room);
+	}
+	
+	private void populateComboBoxes(String room) {
 		Set<Card> deck = instance.getDeck();
+		roomP.setText(room);
 		for (Card card : deck) {
 			CardType type = card.getType();
 			if (type == CardType.WEAPON){
@@ -65,9 +77,6 @@ public class AccusationFrame extends JDialog{
 			}
 			else if (type == CardType.PLAYER) {
 				personP.addItem(card.getName());
-			}
-			else {
-				roomP.addItem(card.getName());
 			}	
 		}
 	}
@@ -76,20 +85,12 @@ public class AccusationFrame extends JDialog{
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			System.out.println("run");
-			Solution answer = instance.getTheAnswer();
-			String personA = personP.getSelectedItem().toString();
-			String weaponA = weaponP.getSelectedItem().toString();
-			String roomA = roomP.getSelectedItem().toString();
-			String person = answer.person.getName();
-			String weapon = answer.weapon.getName();
-			String room = answer.room.getName();
-			if (person.equals(personA) && weapon.equals(weaponA) && room.equals(roomA)) {
-				instance.displayWin();
-			}
-			else {
-				instance.displayLoss();
-			}
+			Solution suggestion = new Solution();
+			suggestion.person = instance.getCard(personP.getSelectedItem().toString());
+			suggestion.room = instance.getCard(roomP.getText());
+			suggestion.weapon = instance.getCard(weaponP.getSelectedItem().toString());
+			instance.buttonMakeSuggestion(suggestion);
+			
 		}
 		
 	}
@@ -97,7 +98,7 @@ public class AccusationFrame extends JDialog{
 	public static void main(String[] args) {
 		instance.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");	
 		instance.initialize();
-		AccusationFrame frame = new AccusationFrame();
+		SuggestionFrame frame = new SuggestionFrame();
 		frame.setVisible(true);	
 	}
 
