@@ -10,12 +10,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.util.*;
+import javax.swing.Timer;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
-public class Board extends JPanel {
+public class Board extends JPanel implements ActionListener {
 
 	private BoardCell[][] grid;
 	private Set<BoardCell> targets;
@@ -28,6 +29,7 @@ public class Board extends JPanel {
 	private Set<Card> deck;
 	private ArrayList<Player> players;
 	private Player currentPlayer;
+	private Player movingPlayer;
 	private Set<Room> targetRooms;
 
 	private Map<Character, Room> roomMap;
@@ -36,7 +38,9 @@ public class Board extends JPanel {
 	private int NUM_ROWS = 0;
 	private int NUM_COLUMNS = 0;
 	
-	
+	Timer tm = new Timer(5, this);
+	private boolean animate;
+	private BoardCell targetCell;
 
 
 	private Board() {
@@ -530,6 +534,51 @@ public class Board extends JPanel {
 		return false;
 	}
 	
+	public void actionPerformed(ActionEvent e) {
+		movingPlayer.setAnimate(true);
+		int x = movingPlayer.getX();
+		int y = movingPlayer.getY();
+		
+		BoardCell currentCell = grid[movingPlayer.getRow()][movingPlayer.getColumn()];
+		int xSpeed = (int) Math.ceil((targetCell.getX() - currentCell.getX()) / 15.0);
+		int ySpeed = (int) Math.ceil((targetCell.getY() - currentCell.getY()) / 15.0);
+		
+		if ((xSpeed > 0 && x >= targetCell.getX()) || (xSpeed < 0 && x <= targetCell.getX())) {
+			stopTimer();
+		}
+		else if ((ySpeed > 0 && y >= targetCell.getY()) || (ySpeed < 0 && y <= targetCell.getY())) {
+			stopTimer();
+		}
+		
+		movingPlayer.setX(x+xSpeed);
+		movingPlayer.setY(y+ySpeed);
+		repaint();
+		
+	}
+
+	/*
+	 * Method used to stop the timer and continue game logic
+	 */
+	private void stopTimer() {
+		movingPlayer.setAnimate(false);
+		movingPlayer.setLocation(targetCell.getRow(), targetCell.getCol());
+		targetCell.setOccupied(true);
+		repaint();
+		if (movingPlayer.equals(currentPlayer)) {
+			if (currentPlayer instanceof HumanPlayer) {
+				if (currentPlayer.isInRoom()) {
+					handleHumanSuggestion(targetCell);
+				}
+				currentPlayer.setFinished(true);
+			}
+			else {
+				makeComputerSuggestion();
+			}
+		}
+		
+		tm.stop();
+	}
+	
 	/*
 	 * private mouse listener class for clicking on the board
 	 */
@@ -545,14 +594,10 @@ public class Board extends JPanel {
 				JOptionPane.showMessageDialog(instance, "That is not a target", "Error", 1);
 				return;
 			}
-			animatePlayer(clickedCell);
+			
+			setupPlayerAnimation(clickedCell, currentPlayer);
 			targets.clear();
 			clearTargetRooms();
-			repaint();
-			if (currentPlayer.isInRoom()) {
-				handleHumanSuggestion(clickedCell);
-			}
-			currentPlayer.setFinished(true);
 		}
 
 		@Override
@@ -577,20 +622,17 @@ public class Board extends JPanel {
 	 * Method that animates player moving to different cells.
 	 * not currently working
 	 */
-	private void animatePlayer(BoardCell targetCell) {
+	private void setupPlayerAnimation(BoardCell targetCell, Player player) {
 		if (targetCell == null) {
 			return;
 		}
-		Thread thread = new Thread();
-		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
-		//int xSpeed = Math.abs(currentCell.getX() - targetCell.getX()) / 50;
-		//int ySpeed = Math.abs(currentCell.getY() - targetCell.getY()) / 50;
+		this.targetCell = targetCell;
+		this.movingPlayer = player;
+		BoardCell currentCell = grid[player.getRow()][player.getColumn()];
 		currentCell.setOccupied(false);
-		//currentPlayer.setAnimate(true);
-
-		//currentPlayer.setAnimate(false);
-		currentPlayer.setLocation(targetCell.getRow(), targetCell.getCol());
-		targetCell.setOccupied(true);
+		System.out.print("moved");
+		tm.start();
+		System.out.println(tm.isRunning());
 	}
 	
 	// method to return the cell that the mouse clicked
@@ -653,12 +695,13 @@ public class Board extends JPanel {
 		if (!suggestedPlayerCell.equals(currentPlayerCell)) {
 			suggested.setRoomTarget(true);
 		}
-		suggested.setLocation(currentPlayer.getRow(), currentPlayer.getColumn());
+		
+		//suggested.setLocation(currentPlayer.getRow(), currentPlayer.getColumn());
+		setupPlayerAnimation(currentPlayerCell, suggested);
 		Card disprove = handleSuggestion(currentPlayer, suggestion);
 		
 		ClueGame.setGuess(suggestion, currentPlayer);
 		ClueGame.setResult(disprove, currentPlayer);
-		repaint();
 		
 		// find the player who disproved the suggestion
 		if (disprove != null) {
@@ -708,13 +751,12 @@ public class Board extends JPanel {
 		makeComputerAccusation();
 		ComputerPlayer comp = (ComputerPlayer) currentPlayer;
 		BoardCell target = comp.selectTarget(targets);
-		animatePlayer(target);
+		setupPlayerAnimation(target, currentPlayer);
+		
 		// clear the targets after moving player
 		targets.clear();
 		clearTargetRooms();
 		// Make a suggestion for computer Player
-		makeComputerSuggestion();
-		repaint();
 	}
 	
 	// Method for deciding if computer wins or not
@@ -753,7 +795,8 @@ public class Board extends JPanel {
 			if (!suggestedPlayerCell.equals(currentPlayerCell)) {
 				suggested.setRoomTarget(true);
 			}
-			suggested.setLocation(comp.getRow(), comp.getColumn());
+			setupPlayerAnimation(currentPlayerCell, suggested);
+			//suggested.setLocation(comp.getRow(), comp.getColumn());
 			Card disprove = handleSuggestion(comp, suggestion);
 			
 			// if no players can disprove set a possible accusation
@@ -765,6 +808,7 @@ public class Board extends JPanel {
 			}
 			ClueGame.setGuess(suggestion, comp);
 			ClueGame.setResult(disprove, comp);
+			repaint();
 		}
 		else {
 			ClueGame.clearGuess();

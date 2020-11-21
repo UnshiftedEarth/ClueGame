@@ -92,12 +92,12 @@ public abstract class Player {
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
 		int n = sameLocationNumber();
-		// if animation is active not currently working 
+		// if animation is active
 		if (animate) {
-			System.out.print(animate);
+			
 		}
 		// if multiple players in a room
-		if (n > 0) {
+		else if (n > 0) {
 			x = loc.calcX(column);
 			y = loc.calcY(row);
 			x += loc.SPACING;
