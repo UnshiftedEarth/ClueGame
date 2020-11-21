@@ -9,12 +9,12 @@ Room, Electrical, E
 Room, Storage, G
 Room, Office, F
 // Players
-Player, Human, Blue, cyan, 6, 11
-Player, Computer, Green, green, 1, 11
-Player, Computer, Pink, pink, 1, 12
-Player, Computer, Yellow, yellow, 2, 11
-Player, Computer, Red, red, 1, 15
-Player, Computer, Orange, orange, 1, 21
+Player, Human, Blue, cyan, 1, 11
+Player, Computer, Green, green, 8, 23
+Player, Computer, Pink, pink, 14, 23
+Player, Computer, Yellow, yellow, 22, 5
+Player, Computer, Red, red, 19, 11
+Player, Computer, Orange, orange, 9, 13
 // Weapons
 Weapon, Gun
 Weapon, Knife

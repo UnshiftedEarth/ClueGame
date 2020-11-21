@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.util.*;
 
 import javax.swing.JOptionPane;
@@ -212,7 +213,8 @@ public class Board extends JPanel {
 	 * this method loads in the room, weapons and player data from the setup text file
 	 */
 	public void loadSetupConfig() throws FileNotFoundException, BadConfigFormatException {
-		FileReader reader = new FileReader(setupConfigFile);
+		//FileReader reader = new FileReader(setupConfigFile); // loads from file
+		InputStream reader = this.getClass().getResourceAsStream(setupConfigFile); // loads from package
 		Scanner scanner = new Scanner(reader);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
@@ -276,7 +278,8 @@ public class Board extends JPanel {
 		// reads in the board csv file and stores in temporary board ArrayList matrix
 		ArrayList<List<String>> tempBoard = new ArrayList<>();
 		int numCols = 0;
-		FileReader reader = new FileReader(layoutConfigFile);
+		//FileReader reader = new FileReader(layoutConfigFile);
+		InputStream reader = this.getClass().getResourceAsStream(layoutConfigFile); // loads from package
 		Scanner scanner = new Scanner(reader);
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
@@ -527,7 +530,9 @@ public class Board extends JPanel {
 		return false;
 	}
 	
-	// mouse listener for clicking on the board
+	/*
+	 * private mouse listener class for clicking on the board
+	 */
 	private class BoardClicked implements MouseListener {
 
 		@Override
@@ -884,8 +889,8 @@ public class Board extends JPanel {
 	}
 
 	public void setConfigFiles(String csv, String txt) {
-		layoutConfigFile = "./data/" + csv;
-		setupConfigFile = "./data/" + txt;
+		layoutConfigFile = "/data/" + csv;
+		setupConfigFile = "/data/" + txt;
 	}
 
 	public void setPlayers(ArrayList<Player> players) {
