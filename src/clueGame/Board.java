@@ -603,9 +603,11 @@ public class Board extends JPanel implements ActionListener {
 			}
 			
 			currentPlayer.setSubmitState(false);
-			setupPlayerAnimation(clickedCell, currentPlayer);
 			targets.clear();
 			clearTargetRooms();
+			repaint();
+			setupPlayerAnimation(clickedCell, currentPlayer);
+			
 		}
 
 		@Override
