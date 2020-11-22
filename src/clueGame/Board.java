@@ -14,6 +14,7 @@ import javax.swing.Timer;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 
 public class Board extends JPanel implements ActionListener {
@@ -534,20 +535,25 @@ public class Board extends JPanel implements ActionListener {
 		return false;
 	}
 	
+	/*
+	 * Method called to animate player, triggered by timer for animation
+	 */
 	public void actionPerformed(ActionEvent e) {
 		movingPlayer.setAnimate(true);
 		int x = movingPlayer.getX();
 		int y = movingPlayer.getY();
 		
 		BoardCell currentCell = grid[movingPlayer.getRow()][movingPlayer.getColumn()];
-		int xSpeed = (int) Math.ceil((targetCell.getX() - currentCell.getX()) / 15.0);
-		int ySpeed = (int) Math.ceil((targetCell.getY() - currentCell.getY()) / 15.0);
+		int xSpeed = (int) Math.ceil((targetCell.getX() - currentCell.getX()) / 25.0);
+		int ySpeed = (int) Math.ceil((targetCell.getY() - currentCell.getY()) / 25.0);
 		
 		if ((xSpeed > 0 && x >= targetCell.getX()) || (xSpeed < 0 && x <= targetCell.getX())) {
 			stopTimer();
+			return;
 		}
 		else if ((ySpeed > 0 && y >= targetCell.getY()) || (ySpeed < 0 && y <= targetCell.getY())) {
 			stopTimer();
+			return;
 		}
 		
 		movingPlayer.setX(x+xSpeed);
@@ -561,6 +567,7 @@ public class Board extends JPanel implements ActionListener {
 	 */
 	private void stopTimer() {
 		movingPlayer.setAnimate(false);
+		currentPlayer.setAnimate(false);
 		movingPlayer.setLocation(targetCell.getRow(), targetCell.getCol());
 		targetCell.setOccupied(true);
 		repaint();
@@ -595,6 +602,7 @@ public class Board extends JPanel implements ActionListener {
 				return;
 			}
 			
+			currentPlayer.setSubmitState(false);
 			setupPlayerAnimation(clickedCell, currentPlayer);
 			targets.clear();
 			clearTargetRooms();
@@ -619,8 +627,7 @@ public class Board extends JPanel implements ActionListener {
 	}
 
 	/*
-	 * Method that animates player moving to different cells.
-	 * not currently working
+	 * Method that setups up the player animation, starts the timer
 	 */
 	private void setupPlayerAnimation(BoardCell targetCell, Player player) {
 		if (targetCell == null) {
@@ -630,9 +637,25 @@ public class Board extends JPanel implements ActionListener {
 		this.movingPlayer = player;
 		BoardCell currentCell = grid[player.getRow()][player.getColumn()];
 		currentCell.setOccupied(false);
-		System.out.print("moved");
-		tm.start();
-		System.out.println(tm.isRunning());
+		// start the timer if player moves to another cell
+		if (!targetCell.equals(currentCell)) {
+			SwingUtilities.invokeLater(() -> tm.start());
+		}
+		else {
+			currentCell.setOccupied(true);
+			if (currentPlayer instanceof ComputerPlayer) {
+				makeComputerSuggestion();
+			}
+			// if human player
+			else {
+				repaint();
+				if (currentPlayer.isInRoom()) {
+					handleHumanSuggestion(targetCell);
+				}
+				currentPlayer.setFinished(true);
+			}
+		}
+		
 	}
 	
 	// method to return the cell that the mouse clicked
@@ -655,11 +678,13 @@ public class Board extends JPanel implements ActionListener {
 	
 	// This method displays the suggestion options
 	public void handleHumanSuggestion(BoardCell cell) {
-		String room = roomMap.get(cell.getInitial()).getName();
-		SuggestionFrame frame = new SuggestionFrame(room);
-		frame.setLocationRelativeTo(this);
-		frame.setModal(true);
-		frame.setVisible(true);
+		if (!currentPlayer.isSubmitState()) {
+			String room = roomMap.get(cell.getInitial()).getName();
+			SuggestionFrame frame = new SuggestionFrame(room);
+			frame.setLocationRelativeTo(this);
+			frame.setModal(true);
+			frame.setVisible(true);
+		}
 	}
 	
 	// Method that runs when the user wishes to make an Accusation
@@ -680,6 +705,7 @@ public class Board extends JPanel implements ActionListener {
 	 */
 	public void buttonMakeSuggestion(Solution suggestion) {
 		// find suggested player
+		currentPlayer.setSubmitState(true);
 		BoardCell currentPlayerCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
 		Player suggested = null;
 		for (Player player : players) {
@@ -688,21 +714,23 @@ public class Board extends JPanel implements ActionListener {
 				break;
 			}
 		}
-		
+
 		// if suggested player is moved to a different room, set a flag
 		BoardCell suggestedPlayerCell = grid[suggested.getRow()][suggested.getColumn()];
 		suggestedPlayerCell.setOccupied(false);
 		if (!suggestedPlayerCell.equals(currentPlayerCell)) {
 			suggested.setRoomTarget(true);
 		}
-		
-		//suggested.setLocation(currentPlayer.getRow(), currentPlayer.getColumn());
-		setupPlayerAnimation(currentPlayerCell, suggested);
+
+		if (!suggested.equals(currentPlayer)) {
+			setupPlayerAnimation(currentPlayerCell, suggested);
+		}
+
 		Card disprove = handleSuggestion(currentPlayer, suggestion);
-		
+
 		ClueGame.setGuess(suggestion, currentPlayer);
 		ClueGame.setResult(disprove, currentPlayer);
-		
+
 		// find the player who disproved the suggestion
 		if (disprove != null) {
 			for (Player player : players) {
@@ -718,12 +746,16 @@ public class Board extends JPanel implements ActionListener {
 	 * Method that runs when the next button is pressed
 	 */
 	public void buttonNext() {
+		if (tm.isRunning()) {
+			return;
+		}
 		if (currentPlayer instanceof HumanPlayer && !currentPlayer.isFinished()) {
 			JOptionPane.showMessageDialog(this, "Please Finish Your Turn", "Error", 1);
 			return;
 		}
 		ArrayList<Player> playerOrder = getPlayerOrder(currentPlayer);
 		currentPlayer = playerOrder.get(1); // get next player
+		currentPlayer.setFinished(false);
 		ClueGame.rollDice();
 		BoardCell currentCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
 		calcTargets(currentCell, ClueGame.getRoll());
@@ -756,7 +788,6 @@ public class Board extends JPanel implements ActionListener {
 		// clear the targets after moving player
 		targets.clear();
 		clearTargetRooms();
-		// Make a suggestion for computer Player
 	}
 	
 	// Method for deciding if computer wins or not
@@ -777,7 +808,8 @@ public class Board extends JPanel implements ActionListener {
 	 */
 	private void makeComputerSuggestion() {
 		BoardCell currentPlayerCell = grid[currentPlayer.getRow()][currentPlayer.getColumn()];
-		if (currentPlayerCell.isRoomCenter()) {
+		if (currentPlayerCell.isRoomCenter() && !currentPlayer.isFinished()) {
+			currentPlayer.setFinished(true);
 			ComputerPlayer comp = (ComputerPlayer) currentPlayer;
 			Solution suggestion = comp.createSuggestion();
 			String name = suggestion.person.getName();
@@ -795,8 +827,11 @@ public class Board extends JPanel implements ActionListener {
 			if (!suggestedPlayerCell.equals(currentPlayerCell)) {
 				suggested.setRoomTarget(true);
 			}
-			setupPlayerAnimation(currentPlayerCell, suggested);
-			//suggested.setLocation(comp.getRow(), comp.getColumn());
+			
+			// don't move the player if the suggested player is the current player
+			if (!suggested.equals(currentPlayer)) {
+				setupPlayerAnimation(currentPlayerCell, suggested);
+			}
 			Card disprove = handleSuggestion(comp, suggestion);
 			
 			// if no players can disprove set a possible accusation
@@ -808,7 +843,6 @@ public class Board extends JPanel implements ActionListener {
 			}
 			ClueGame.setGuess(suggestion, comp);
 			ClueGame.setResult(disprove, comp);
-			repaint();
 		}
 		else {
 			ClueGame.clearGuess();
