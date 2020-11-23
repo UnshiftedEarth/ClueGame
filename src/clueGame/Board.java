@@ -196,7 +196,7 @@ public class Board extends JPanel implements ActionListener {
 		for (int i = 0; i < size; i++) {
 			rand = random.nextInt(deckCopy.size());
 			playersCopy.get(location).updateHand(deckCopy.remove(rand));
-			if (location == 5) {
+			if (location == players.size()-1) {
 				location = -1;
 			}
 			location++;
