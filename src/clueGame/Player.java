@@ -20,6 +20,7 @@ public abstract class Player {
 	private boolean offset;
 	private boolean roomTarget;
 	private boolean finished;
+	private boolean submitState;
 	protected Set<Card> hand;
 	protected Set<Card> seenCards;
 	protected Board board = Board.getInstance();
@@ -92,12 +93,12 @@ public abstract class Player {
 		int w = loc.getCellWidth();
 		int h = loc.getCellHeight();
 		int n = sameLocationNumber();
-		// if animation is active not currently working 
+		// if animation is active
 		if (animate) {
-			System.out.print(animate);
+			// don't set x and y
 		}
 		// if multiple players in a room
-		if (n > 0) {
+		else if (n > 0) {
 			x = loc.calcX(column);
 			y = loc.calcY(row);
 			x += loc.SPACING;
@@ -127,6 +128,7 @@ public abstract class Player {
 		return false;
 	}
 	
+	// Looks at other players to see if they are in the same room as the current player
 	private int sameLocationNumber() {
 		int count = 0;
 		for (Player player : board.getPlayers()) {
@@ -211,6 +213,14 @@ public abstract class Player {
 
 	public void setAnimate(boolean b) {
 		animate = b;
+	}
+
+	public boolean isSubmitState() {
+		return submitState;
+	}
+
+	public void setSubmitState(boolean submitState) {
+		this.submitState = submitState;
 	}
 
 	public void setLocation(int row, int col) {

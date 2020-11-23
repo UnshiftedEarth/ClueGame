@@ -27,4 +27,8 @@ public class Solution {
 		return false;
 	}
 	
+	public String toString() {
+		return ""+person.getName() + " " + room.getName() + " " + weapon.getName();
+		
+	}
 }
